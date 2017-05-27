@@ -1,0 +1,15 @@
+/** 
+ * 
+ */
+package drone
+
+import java.util.List
+import javax.vecmath.Vector3f
+
+/** 
+ * @author Alexandre
+ * 
+ */
+capacity Moving {
+	def seekingFixedTarget(listOfObstacle : List<Cube>, body : DroneBody) : Vector3f
+}

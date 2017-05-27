@@ -1,0 +1,95 @@
+/** 
+ * 
+ */
+package drone
+/** 
+ * @author Clément
+ * 
+ */
+
+import com.google.gson.Gson
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Destroy
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import io.sarl.core.Logging
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.PrintWriter
+import java.net.ServerSocket
+import java.net.Socket
+import java.util.HashMap
+
+event SendMessage {
+	var object : Object
+	new (o:Object){
+		this.object = o;
+	}
+}
+
+event ReadMessage
+event CloseServer
+event StopBuffer
+event ReceivedMessage{
+	var message : Object
+	new (o : Object){
+		message = o
+	}
+}
+
+
+agent ServAgent {
+
+	uses Logging, Lifecycle, DefaultContextInteractions
+	
+	
+	var socketServer : ServerSocket
+	var socket : Socket
+	var reader : BufferedReader
+	var writer : PrintWriter
+	var gson : Gson
+	
+	def sendMessage(o : Object){
+		emit (new SendMessage(o))
+	}
+	
+	def readMessage(){
+		emit (new ReadMessage())
+	}
+
+	on Initialize {
+
+		info("Server Agent started")
+		val port = 8080;
+		gson = new Gson()
+		socketServer = new ServerSocket(port)
+		socket = socketServer.accept()
+	 	info("Client connected to server")
+//		spawn(testAgent)
+		//		spawn(testAgent2)
+	 	
+		spawn(BufferReaderAgent, socket)
+		writer = new PrintWriter(socket.getOutputStream());
+	}	
+	
+	on SendMessage {
+		var obj = occurrence.object
+		var UUID = occurrence.source.getUUID
+		
+		var map = new HashMap<String, Object>
+		map.put("UUID", UUID)
+		map.put("object",obj)
+		
+		var jsonString = gson.toJson(map);
+		
+		writer.println(jsonString);
+		writer.flush
+	}
+	
+	on CloseServer {
+		writer.close()
+		socket.close()
+		socketServer.close()
+		killMe
+	}
+}
