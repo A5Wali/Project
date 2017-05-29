@@ -39,7 +39,7 @@ agent droneAgent {
 		var o : Message<Object> = occurrence.message;
 		info("Agent2 : Message reçu " + occurrence.message)
 		if(o.type == TypeMessage.ENVOI){
-			var received =  o.message as List<Cube>
+			//var received =  o.message as List<Cube>
 		}else{
 			// .... 
 		}
