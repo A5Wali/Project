@@ -17,6 +17,24 @@ public class Message<T extends Object> {
     this.message = m;
   }
   
+  @Pure
+  public TypeMessage getType() {
+    return this.type;
+  }
+  
+  public TypeMessage setType(final TypeMessage type) {
+    return this.type = type;
+  }
+  
+  @Pure
+  public T getMessage() {
+    return this.message;
+  }
+  
+  public T setMessage(final T message) {
+    return this.message = message;
+  }
+  
   @Override
   @Pure
   @SyntheticMember

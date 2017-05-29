@@ -16,4 +16,19 @@ class Message <T> {
 		type = t
 		message = m
 	}
+	
+	def getType() : TypeMessage{
+		return type
+	}
+	
+	def setType(type : TypeMessage){
+		this.type = type;
+	}
+	
+	def getMessage() : T{
+		return message;
+	}
+	def setMessage(message : T){
+		this.message = message
+	}
 }

@@ -1,5 +1,6 @@
 package drone;
 
+import com.google.common.base.Objects;
 import drone.CommunicationCapacity;
 import drone.CommunicationSkill;
 import drone.Cube;
@@ -60,8 +61,16 @@ public class droneAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$ReceivedMessage$1(final ReceivedMessage occurrence) {
+    Message<Object> o = occurrence.message;
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = $getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(("Agent2 : Message reçu " + occurrence.message));
+    TypeMessage _type = o.getType();
+    boolean _equals = Objects.equal(_type, TypeMessage.ENVOI);
+    if (_equals) {
+      Object _message = o.getMessage();
+      List<Cube> received = ((List<Cube>) _message);
+    } else {
+    }
     List<Cube> list = null;
     Moving _$CAPACITY_USE$DRONE_MOVING$CALLER = this.$castSkill(Moving.class, (this.$CAPACITY_USE$DRONE_MOVING == null || this.$CAPACITY_USE$DRONE_MOVING.get() == null) ? (this.$CAPACITY_USE$DRONE_MOVING = $getSkill(Moving.class)) : this.$CAPACITY_USE$DRONE_MOVING);
     Vector3f v = _$CAPACITY_USE$DRONE_MOVING$CALLER.seekingFixedTarget(list, this.body);

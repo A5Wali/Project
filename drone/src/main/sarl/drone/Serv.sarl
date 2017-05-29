@@ -31,8 +31,8 @@ event ReadMessage
 event CloseServer
 event StopBuffer
 event ReceivedMessage{
-	var message : Object
-	new (o : Object){
+	var message : Message<Object>
+	new (o : Message<Object>){
 		message = o
 	}
 }
