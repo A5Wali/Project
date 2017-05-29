@@ -1,0 +1,11 @@
+/** 
+ * 
+ */
+package drone
+/** 
+ * @author Clément
+ * 
+ */
+enum TypeMessage {
+	ENVOI;
+}

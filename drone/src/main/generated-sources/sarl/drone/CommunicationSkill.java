@@ -1,6 +1,7 @@
 package drone;
 
 import drone.CommunicationCapacity;
+import drone.Message;
 import drone.SendMessage;
 import drone.ServAgent;
 import drone.StopBuffer;
@@ -19,7 +20,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlSpecification("0.5")
 @SuppressWarnings("all")
 public class CommunicationSkill extends Skill implements CommunicationCapacity {
-  public void sendMessage(final Object o) {
+  public void sendMessage(final Message o) {
     DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = $getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
     SendMessage _sendMessage = new SendMessage(o);
     _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_sendMessage);

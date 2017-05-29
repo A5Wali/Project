@@ -1,5 +1,6 @@
 package drone;
 
+import drone.Message;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.core.AgentTrait;
 import io.sarl.lang.core.Capacity;
@@ -10,7 +11,7 @@ import io.sarl.lang.core.Capacity;
 @SarlSpecification("0.5")
 @SuppressWarnings("all")
 public interface CommunicationCapacity extends Capacity {
-  public abstract void sendMessage(final Object o);
+  public abstract void sendMessage(final Message message);
   
   public abstract void startServer();
   
@@ -21,10 +22,10 @@ public interface CommunicationCapacity extends Capacity {
       super(capacity, caller);
     }
     
-    public void sendMessage(final Object o) {
+    public void sendMessage(final Message message) {
       try {
         ensureCallerInLocalThread();
-        this.capacity.sendMessage(o);
+        this.capacity.sendMessage(message);
       } finally {
         resetCallerInLocalThread();
       }

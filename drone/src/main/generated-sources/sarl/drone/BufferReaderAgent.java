@@ -2,6 +2,7 @@ package drone;
 
 import com.google.gson.Gson;
 import drone.CloseServer;
+import drone.Message;
 import drone.ReceivedMessage;
 import drone.StopBuffer;
 import io.sarl.core.DefaultContextInteractions;
@@ -75,8 +76,8 @@ public class BufferReaderAgent extends Agent {
                   String strUUID = ((String) _get);
                   UUID uuid = UUID.fromString(strUUID);
                   Object _get_1 = map.get("objet");
-                  Object obj = ((Object) _get_1);
-                  BufferReaderAgent.this.sendMessageToConcernedAgent(uuid, obj);
+                  Message message = ((Message) _get_1);
+                  BufferReaderAgent.this.sendMessageToConcernedAgent(uuid, message);
                 }
               } catch (final Throwable _t) {
                 if (_t instanceof InterruptedException) {
@@ -98,7 +99,7 @@ public class BufferReaderAgent extends Agent {
     }
   }
   
-  protected void sendMessageToConcernedAgent(final UUID addresse, final Object message) {
+  protected void sendMessageToConcernedAgent(final UUID addresse, final Message message) {
     DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = $getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
     ReceivedMessage _receivedMessage = new ReceivedMessage(message);
     _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.willReceive(addresse, _receivedMessage);

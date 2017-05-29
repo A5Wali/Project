@@ -1,0 +1,19 @@
+/** 
+ * 
+ */
+package drone
+/** 
+ * @author Clément
+ * 
+ */
+ import drone.TypeMessage
+class Message <T> {
+	
+	var type : drone.TypeMessage
+	var message : T
+	
+	new(t : TypeMessage, m : T){
+		type = t
+		message = m
+	}
+}

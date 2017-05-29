@@ -11,7 +11,7 @@ import io.sarl.core.Lifecycle
  * 
  */
 capacity CommunicationCapacity  {
-	def sendMessage(o : Object);
+	def sendMessage(message : Message);
 	def startServer()
 	def closeServer();
 }
@@ -19,7 +19,7 @@ capacity CommunicationCapacity  {
 skill CommunicationSkill implements CommunicationCapacity {
 	uses DefaultContextInteractions, Lifecycle
 	
-	def sendMessage(o : Object) {
+	def sendMessage(o : Message) {
 		emit(new drone.SendMessage(o))
 	}
 	

@@ -36,7 +36,9 @@ agent droneAgent {
 	on ReceivedMessage {
 		info("Agent2 : Message reçu " + occurrence.message)
 		var list : List<Cube>
-		sendMessage(seekingFixedTarget(list, this.body))
+		var v = seekingFixedTarget(list, this.body)
+		var message = new Message(TypeMessage.ENVOI, v)
+		sendMessage(message)
 	}
 
 	on Destroy {
