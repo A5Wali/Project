@@ -3,7 +3,6 @@
  */
 package drone
 
-import com.google.inject.spi.Message
 import io.sarl.core.AgentKilled
 import io.sarl.core.AgentSpawned
 import io.sarl.core.ContextJoined
@@ -23,7 +22,7 @@ import javax.vecmath.Vector3f
 agent DroneAgent {
 	uses Logging, Lifecycle, CommunicationCapacity, Moving
 	private var body : DroneBody
-	private var target : drone.Sphere
+	private var target : Sphere
 
 	on Initialize {
 		// Event trigger before the agent begin to live or to be used.
@@ -31,7 +30,7 @@ agent DroneAgent {
 		info("The agent was started.")
 		setSkill(new CommunicationSkill, CommunicationCapacity)
 		setSkill(new SeekingSkill, Moving)
-		val message = new drone.Message(TypeMessage.SPAWN, "")
+		val message = new Message(TypeMessage.SPAWN, "")
 		sendMessage(message)
 	}
 
@@ -41,14 +40,14 @@ agent DroneAgent {
 		if(o.type == TypeMessage.ACC){
 			val list : List<Cube> = o.message as List<Cube>
 			val v : Vector3f = seekingFixedTarget(list, this.body, this.target)
-			val message = new drone.Message(TypeMessage.ACC, v)
+			val message = new Message(TypeMessage.ACC, v)
 			sendMessage(message)
 		} else if (o.type == TypeMessage.SPAWN) {
 			this.body = o.message as DroneBody
 		} else if (o.type == TypeMessage.DELETE) {
 			killMe
 		} else if (o.type == TypeMessage.TARGET) {
-			this.target = o.message as drone.Sphere
+			this.target = o.message as Sphere
 		}
 	}
 

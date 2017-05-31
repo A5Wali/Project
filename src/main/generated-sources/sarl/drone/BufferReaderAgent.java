@@ -76,7 +76,7 @@ public class BufferReaderAgent extends Agent {
                   String strUUID = ((String) _get);
                   UUID uuid = UUID.fromString(strUUID);
                   Object _get_1 = map.get("objet");
-                  Message message = ((Message) _get_1);
+                  Message message = BufferReaderAgent.this.gson.<Message>fromJson(((String) _get_1), Message.class);
                   BufferReaderAgent.this.sendMessageToConcernedAgent(uuid, message);
                 }
               } catch (final Throwable _t) {
