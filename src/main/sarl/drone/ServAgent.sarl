@@ -19,8 +19,8 @@ import java.net.Socket
 import java.util.HashMap
 
 event SendMessage {
-	var object : Object
-	new (o:Object){
+	var object : Message
+	new (o : Message) {
 		this.object = o;
 	}
 }
@@ -47,7 +47,7 @@ agent ServAgent {
 	var writer : PrintWriter
 	var gson : Gson
 	
-	def sendMessage(o : Object){
+	def sendMessage(o : Message){
 		emit (new SendMessage(o))
 	}
 	
@@ -63,11 +63,12 @@ agent ServAgent {
 		socketServer = new ServerSocket(port)
 		socket = socketServer.accept()
 	 	info("Client connected to server")
+		spawn(BufferReaderAgent, socket)
+		writer = new PrintWriter(socket.getOutputStream());
 		spawn(DroneAgent)
 		//		spawn(testAgent2)
 	 	
-		spawn(BufferReaderAgent, socket)
-		writer = new PrintWriter(socket.getOutputStream());
+
 	}	
 	
 	on SendMessage {

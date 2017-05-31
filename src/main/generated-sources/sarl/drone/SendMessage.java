@@ -1,5 +1,6 @@
 package drone;
 
+import drone.Message;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import io.sarl.lang.core.Event;
@@ -8,9 +9,9 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlSpecification("0.5")
 @SuppressWarnings("all")
 public class SendMessage extends Event {
-  public Object object;
+  public Message object;
   
-  public SendMessage(final Object o) {
+  public SendMessage(final Message o) {
     this.object = o;
   }
   
@@ -55,5 +56,5 @@ public class SendMessage extends Event {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = -750670780L;
+  private final static long serialVersionUID = -2255856636L;
 }

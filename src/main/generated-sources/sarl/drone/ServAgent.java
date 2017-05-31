@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import drone.BufferReaderAgent;
 import drone.CloseServer;
 import drone.DroneAgent;
+import drone.Message;
 import drone.ReadMessage;
 import drone.SendMessage;
 import io.sarl.core.DefaultContextInteractions;
@@ -45,7 +46,7 @@ public class ServAgent extends Agent {
   
   private Gson gson;
   
-  protected void sendMessage(final Object o) {
+  protected void sendMessage(final Message o) {
     DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = $getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
     SendMessage _sendMessage = new SendMessage(o);
     _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_sendMessage);
@@ -71,12 +72,12 @@ public class ServAgent extends Agent {
       Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = $getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
       _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("Client connected to server");
       Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = $getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
-      _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(DroneAgent.class);
-      Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER_1 = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = $getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
-      _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER_1.spawn(BufferReaderAgent.class, this.socket);
+      _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(BufferReaderAgent.class, this.socket);
       OutputStream _outputStream = this.socket.getOutputStream();
       PrintWriter _printWriter = new PrintWriter(_outputStream);
       this.writer = _printWriter;
+      Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER_1 = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = $getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+      _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER_1.spawn(DroneAgent.class);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -84,7 +85,7 @@ public class ServAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$SendMessage$1(final SendMessage occurrence) {
-    Object obj = occurrence.object;
+    Message obj = occurrence.object;
     UUID UUID = occurrence.getSource().getUUID();
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("UUID", UUID);
