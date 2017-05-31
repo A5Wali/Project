@@ -32,15 +32,17 @@ agent DroneAgent {
 		setSkill(new CommunicationSkill, CommunicationCapacity)
 		startServer
 		setSkill(new SeekingSkill, Moving)
+		val message = new Message(TypeMessage.SPAWN, null)
+		sendMessage(message)
 	}
 
 	on ReceivedMessage {
 		var o : Message<Object> = occurrence.message;
 //		info("Agent2 : Message reçu " + occurrence.message)
 		if(o.type == TypeMessage.ACC){
-			var list : List<Cube> = o.message as List<Cube>
-			var v : Vector3f = seekingFixedTarget(list, this.body, this.target)
-			var message = new Message<Vector3f>(TypeMessage.ACC, v)
+			val list : List<Cube> = o.message as List<Cube>
+			val v : Vector3f = seekingFixedTarget(list, this.body, this.target)
+			val message = new Message<Vector3f>(TypeMessage.ACC, v)
 			sendMessage(message)
 		} else if (o.type == TypeMessage.SPAWN) {
 			this.body = o.message as DroneBody

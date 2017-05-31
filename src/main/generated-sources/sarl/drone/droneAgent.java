@@ -60,6 +60,9 @@ public class DroneAgent extends Agent {
     _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER.startServer();
     SeekingSkill _seekingSkill = new SeekingSkill();
     this.<SeekingSkill>setSkill(_seekingSkill, Moving.class);
+    final Message<Object> message = new Message<Object>(TypeMessage.SPAWN, null);
+    CommunicationCapacity _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER_1 = this.$castSkill(CommunicationCapacity.class, (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY == null || this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY.get() == null) ? (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY = this.$getSkill(CommunicationCapacity.class)) : this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY);
+    _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER_1.sendMessage(message);
   }
   
   @SyntheticMember
@@ -69,10 +72,10 @@ public class DroneAgent extends Agent {
     boolean _equals = Objects.equal(_type, TypeMessage.ACC);
     if (_equals) {
       Object _message = o.getMessage();
-      List<Cube> list = ((List<Cube>) _message);
+      final List<Cube> list = ((List<Cube>) _message);
       Moving _$CAPACITY_USE$DRONE_MOVING$CALLER = this.$castSkill(Moving.class, (this.$CAPACITY_USE$DRONE_MOVING == null || this.$CAPACITY_USE$DRONE_MOVING.get() == null) ? (this.$CAPACITY_USE$DRONE_MOVING = this.$getSkill(Moving.class)) : this.$CAPACITY_USE$DRONE_MOVING);
-      Vector3f v = _$CAPACITY_USE$DRONE_MOVING$CALLER.seekingFixedTarget(list, this.body, this.target);
-      Message<Vector3f> message = new Message<Vector3f>(TypeMessage.ACC, v);
+      final Vector3f v = _$CAPACITY_USE$DRONE_MOVING$CALLER.seekingFixedTarget(list, this.body, this.target);
+      final Message<Vector3f> message = new Message<Vector3f>(TypeMessage.ACC, v);
       CommunicationCapacity _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER = this.$castSkill(CommunicationCapacity.class, (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY == null || this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY.get() == null) ? (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY = this.$getSkill(CommunicationCapacity.class)) : this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY);
       _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER.sendMessage(message);
     } else {
