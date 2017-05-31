@@ -9,12 +9,10 @@ package drone
 
 import com.google.gson.Gson
 import io.sarl.core.DefaultContextInteractions
-import io.sarl.core.Destroy
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
 import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.ServerSocket
 import java.net.Socket
@@ -31,8 +29,8 @@ event ReadMessage
 event CloseServer
 event StopBuffer
 event ReceivedMessage{
-	var message : Message<Object>
-	new (o : Message<Object>){
+	var message : Message
+	new (o : Message){
 		message = o
 	}
 }

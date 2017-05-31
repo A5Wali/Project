@@ -1,0 +1,113 @@
+/** 
+ * 
+ */
+package drone
+
+import io.sarl.core.Logging
+import java.util.List
+import javax.vecmath.Vector3f
+
+/** 
+ * @author Alexandre
+ * 
+ */
+skill SeekingSkill implements Moving {
+	uses Logging
+
+	def install {
+		// Function invoked when the skill is installed in the owner.
+		// You should put all the initialization statements in this block of code.
+		info("Installing the skill")
+	}
+
+	def uninstall {
+		// Function invoked when the skill is uninstalled from the owner.
+		// You should put all the resource release statements in this block of code.
+		info("Uninstalling the skill")
+	}
+	
+	def seekingFixedTarget(listOfObstacle : List<Cube>, body : DroneBody, target : drone.Sphere) : Vector3f {
+		val tMax : float = 10; // maximum anticipation time before collision
+		val breakZone : float = 5;
+		val stopZone : float = 1;
+		var droneToTargetVector : Vector3f
+		droneToTargetVector.sub(target.position, body.position) // vector from drone to target
+		val distanceDroneToTarget : float = droneToTargetVector.length // absolute distance between the drone and target
+		
+		if (distanceDroneToTarget <= stopZone) {
+			var stopVector : Vector3f = body.currentSpeed
+			stopVector.negate
+			return stopVector 	// stop
+		} else {
+			var droneToObjectVector : Vector3f // vector from drone to object i
+			var newAcc : Vector3f = droneToTargetVector //acceleration to return after some modifications
+			val currentSpeed : float = body.currentSpeed.length
+			var distanceOfObjectToPath : float // ditance between object i to droneToTargetPath
+			var crossProduct : Vector3f
+			var distanceDroneToObject : float // distance drone to object i
+			var objectToTargetVector : Vector3f
+			var timeToCollision : float
+			var slidingForceH : Vector3f
+			var slidingForceV : Vector3f
+			var slidingForce : Vector3f
+			val scaledDroneToTargetVectorLength : float = droneToTargetVector.length / 5
+			val protectingSphere : float = 5
+			var repulsiveForce : Vector3f
+			
+			
+			for (var i : int = 0; i < listOfObstacle.length; i++) {
+				droneToObjectVector.sub(listOfObstacle.get(i).position, body.position)
+				crossProduct.cross(droneToObjectVector, droneToTargetVector)
+				distanceOfObjectToPath = crossProduct.length / distanceDroneToTarget
+				distanceDroneToObject = droneToObjectVector.length
+
+				// collision detection:
+				if (distanceOfObjectToPath < (listOfObstacle.get(i).width / 2 + body.width / 2)) {
+					distanceDroneToObject = droneToObjectVector.length
+					timeToCollision = distanceDroneToObject / currentSpeed
+					objectToTargetVector.sub(target.position , listOfObstacle.get(i).position)
+					
+					//Sliding Force:
+					if ((distanceDroneToObject < distanceDroneToTarget) && (objectToTargetVector.length < distanceDroneToTarget) && (timeToCollision < tMax)) { // = the object is between target and drone & we are in anticipation time
+						
+						//Horizontal sliding Force:
+						slidingForceH.cross(droneToObjectVector, new Vector3f(0, 1, 0))
+						if ((slidingForceH.dot(droneToTargetVector) ) < 0) {
+							slidingForceH.scale(-1)
+						}
+						
+						//Vertical sliding Force:
+						slidingForceV.cross(droneToObjectVector, new Vector3f(0, 0, 1))
+						if ((slidingForceV.dot(droneToTargetVector) ) < 0) {
+							slidingForceV.scale(-1)
+						}
+						slidingForce.add(slidingForceV, slidingForceH)
+						slidingForce.scale(scaledDroneToTargetVectorLength / slidingForce.length)
+						slidingForce.scale(1 / timeToCollision - 1 / tMax)
+						newAcc.add(slidingForce)
+					}
+				}
+				
+				// We add a Repulsive force in Protected area:
+				if (distanceDroneToObject < protectingSphere){ 
+					repulsiveForce = droneToObjectVector
+					repulsiveForce.negate
+					repulsiveForce.scale(scaledDroneToTargetVectorLength / repulsiveForce.length)
+					repulsiveForce.scale(1 / distanceDroneToObject - 1 / protectingSphere)
+					newAcc.add(repulsiveForce)
+				}
+			}
+			if (distanceDroneToTarget > breakZone) {
+				newAcc.scale(body.maxSpeed / (newAcc.length)) 	// speed adjustment to reach desired speed
+			} else {
+				newAcc.scale((body.maxSpeed * distanceDroneToTarget / breakZone) / newAcc.length) 	// speed adjustment to break
+			}
+			newAcc.sub(body.currentSpeed)
+			if (newAcc.length > body.maxAcc) {
+				newAcc.scale( newAcc.length/ body.maxAcc) // acceleration adjustment to respect max Acceleration
+			}
+			return newAcc
+		}
+	}
+}
+

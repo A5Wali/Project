@@ -1,13 +1,11 @@
 package drone;
 
-import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import io.sarl.lang.core.Event;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 @SarlSpecification("0.5")
-@SarlElementType(13)
 @SuppressWarnings("all")
 public class SendMessage extends Event {
   public Object object;
@@ -20,6 +18,18 @@ public class SendMessage extends Event {
   @Pure
   @SyntheticMember
   public boolean equals(final Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    SendMessage other = (SendMessage) obj;
+    if (this.object == null) {
+      if (other.object != null)
+        return false;
+    } else if (!this.object.equals(other.object))
+      return false;
     return super.equals(obj);
   }
   
@@ -27,7 +37,9 @@ public class SendMessage extends Event {
   @Pure
   @SyntheticMember
   public int hashCode() {
+    final int prime = 31;
     int result = super.hashCode();
+    result = prime * result + ((this.object== null) ? 0 : this.object.hashCode());
     return result;
   }
   
