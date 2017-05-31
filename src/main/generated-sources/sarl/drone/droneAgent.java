@@ -51,13 +51,11 @@ public class DroneAgent extends Agent {
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was started.");
     CommunicationSkill _communicationSkill = new CommunicationSkill();
     this.<CommunicationSkill>setSkill(_communicationSkill, CommunicationCapacity.class);
-    CommunicationCapacity _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER = this.$castSkill(CommunicationCapacity.class, (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY == null || this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY.get() == null) ? (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY = $getSkill(CommunicationCapacity.class)) : this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY);
-    _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER.startServer();
     SeekingSkill _seekingSkill = new SeekingSkill();
     this.<SeekingSkill>setSkill(_seekingSkill, Moving.class);
     final Message message = new Message(TypeMessage.SPAWN, "");
-    CommunicationCapacity _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER_1 = this.$castSkill(CommunicationCapacity.class, (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY == null || this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY.get() == null) ? (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY = $getSkill(CommunicationCapacity.class)) : this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY);
-    _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER_1.sendMessage(message);
+    CommunicationCapacity _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER = this.$castSkill(CommunicationCapacity.class, (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY == null || this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY.get() == null) ? (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY = $getSkill(CommunicationCapacity.class)) : this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY);
+    _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER.sendMessage(message);
   }
   
   @SyntheticMember

@@ -30,7 +30,6 @@ agent DroneAgent {
 		// You should put all the initialization statements in this block of code.
 		info("The agent was started.")
 		setSkill(new CommunicationSkill, CommunicationCapacity)
-		startServer
 		setSkill(new SeekingSkill, Moving)
 		val message = new drone.Message(TypeMessage.SPAWN, "")
 		sendMessage(message)
