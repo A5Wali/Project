@@ -11,5 +11,5 @@ import javax.vecmath.Vector3f
  * 
  */
 capacity Moving {
-	def seekingFixedTarget(listOfObstacle : List<Cube>, body : DroneBody) : Vector3f
+	def seekingFixedTarget(listOfObstacle : List<Cube>, body : DroneBody, target : drone.Sphere) : Vector3f
 }

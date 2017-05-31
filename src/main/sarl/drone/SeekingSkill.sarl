@@ -5,7 +5,6 @@ package drone
 
 import io.sarl.core.Logging
 import java.util.List
-import javax.vecmath.Point3f
 import javax.vecmath.Vector3f
 
 /** 
@@ -27,12 +26,12 @@ skill SeekingSkill implements Moving {
 		info("Uninstalling the skill")
 	}
 	
-	def seekingFixedTarget(listOfObstacle : List<Cube>, body : DroneBody) : Vector3f {
+	def seekingFixedTarget(listOfObstacle : List<Cube>, body : DroneBody, target : drone.Sphere) : Vector3f {
 		val tMax : float = 10; // maximum anticipation time before collision
 		val breakZone : float = 5;
 		val stopZone : float = 1;
 		var droneToTargetVector : Vector3f
-		droneToTargetVector.sub(EnvObj.target.position, body.position) // vector from drone to target
+		droneToTargetVector.sub(target.position, body.position) // vector from drone to target
 		val distanceDroneToTarget : float = droneToTargetVector.length // absolute distance between the drone and target
 		
 		if (distanceDroneToTarget <= stopZone) {
@@ -66,7 +65,7 @@ skill SeekingSkill implements Moving {
 				if (distanceOfObjectToPath < (listOfObstacle.get(i).width / 2 + body.width / 2)) {
 					distanceDroneToObject = droneToObjectVector.length
 					timeToCollision = distanceDroneToObject / currentSpeed
-					objectToTargetVector.sub(EnvObj.target.position , listOfObstacle.get(i).position)
+					objectToTargetVector.sub(target.position , listOfObstacle.get(i).position)
 					
 					//Sliding Force:
 					if ((distanceDroneToObject < distanceDroneToTarget) && (objectToTargetVector.length < distanceDroneToTarget) && (timeToCollision < tMax)) { // = the object is between target and drone & we are in anticipation time

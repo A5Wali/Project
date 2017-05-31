@@ -39,7 +39,7 @@ agent DroneAgent {
 //		info("Agent2 : Message reçu " + occurrence.message)
 		if(o.type == TypeMessage.ACC){
 			var list : List<Cube> = o.message as List<Cube>
-			var v : Vector3f = seekingFixedTarget(list, this.body)
+			var v : Vector3f = seekingFixedTarget(list, this.body, this.target)
 			var message = new Message<Vector3f>(TypeMessage.ACC, v)
 			sendMessage(message)
 		} else if (o.type == TypeMessage.SPAWN) {

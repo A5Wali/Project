@@ -20,11 +20,11 @@ skill CommunicationSkill implements CommunicationCapacity {
 	uses DefaultContextInteractions, Lifecycle
 	
 	def sendMessage(o : Message) {
-		emit(new drone.SendMessage(o))
+		emit(new SendMessage(o))
 	}
 	
 	def closeServer(){
-		emit(new drone.StopBuffer())
+		emit(new StopBuffer())
 	}
 	
 	def startServer(){

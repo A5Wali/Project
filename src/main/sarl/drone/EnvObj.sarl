@@ -11,8 +11,6 @@ import javax.vecmath.Point3f
 class EnvObj {
 	private var position : Point3f
 	
-	public static var target : Cuboid
-	
 	new(){
 		this.position = new Point3f
 	}
@@ -28,13 +26,6 @@ class EnvObj {
 	def getPosition():Point3f{
 		this.position
 	}
-	
-	def setTarget(pos : Point3f, w : float, h : float, l : float){
-		EnvObj.target = new Cuboid(pos, w, h, l)
-	}
-	
-	public def getTarget() : Cuboid {
-		EnvObj.target
-	}
 }
+
 

@@ -2,8 +2,8 @@ package drone;
 
 import drone.Cube;
 import drone.DroneBody;
-import drone.EnvObj;
 import drone.Moving;
+import drone.Sphere;
 import io.sarl.core.Logging;
 import io.sarl.lang.annotation.ImportedCapacityFeature;
 import io.sarl.lang.annotation.SarlElementType;
@@ -37,12 +37,12 @@ public class SeekingSkill extends Skill implements Moving {
   }
   
   @Pure
-  public Vector3f seekingFixedTarget(final List<Cube> listOfObstacle, final DroneBody body) {
+  public Vector3f seekingFixedTarget(final List<Cube> listOfObstacle, final DroneBody body, final Sphere target) {
     final float tMax = 10;
     final float breakZone = 5;
     final float stopZone = 1;
     Vector3f droneToTargetVector = null;
-    droneToTargetVector.sub(EnvObj.target.getPosition(), body.getPosition());
+    droneToTargetVector.sub(target.getPosition(), body.getPosition());
     final float distanceDroneToTarget = droneToTargetVector.length();
     if ((distanceDroneToTarget <= stopZone)) {
       Vector3f stopVector = body.getCurrentSpeed();
@@ -81,7 +81,7 @@ public class SeekingSkill extends Skill implements Moving {
           if (_lessThan) {
             distanceDroneToObject = droneToObjectVector.length();
             timeToCollision = (distanceDroneToObject / currentSpeed);
-            objectToTargetVector.sub(EnvObj.target.getPosition(), listOfObstacle.get(i).getPosition());
+            objectToTargetVector.sub(target.getPosition(), listOfObstacle.get(i).getPosition());
             if ((((distanceDroneToObject < distanceDroneToTarget) && (objectToTargetVector.length() < distanceDroneToTarget)) && (timeToCollision < tMax))) {
               Vector3f _vector3f = new Vector3f(0, 1, 0);
               slidingForceH.cross(droneToObjectVector, _vector3f);
