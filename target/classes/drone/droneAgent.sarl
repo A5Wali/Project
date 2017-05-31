@@ -13,7 +13,6 @@ import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
 import io.sarl.core.MemberJoined
 import io.sarl.core.MemberLeft
-import java.util.UUID
 import java.util.List
 import javax.vecmath.Vector3f
 
@@ -24,7 +23,6 @@ import javax.vecmath.Vector3f
 agent droneAgent {
 	uses Logging, Lifecycle, CommunicationCapacity, Moving
 	private var body : DroneBody
-	private var id : UUID
 
 	on Initialize {
 		// Event trigger before the agent begin to live or to be used.
@@ -37,16 +35,18 @@ agent droneAgent {
 
 	on ReceivedMessage {
 		var o : Message<Object> = occurrence.message;
-		info("Agent2 : Message reçu " + occurrence.message)
-		if(o.type == TypeMessage.ENVOI){
-			//var received =  o.message as List<Cube>
-		}else{
-			// .... 
+//		info("Agent2 : Message reçu " + occurrence.message)
+		if(o.type == TypeMessage.ACC){
+			var list : List<Cube> = o.message as List<Cube>
+			var v : Vector3f = seekingFixedTarget(list, this.body)
+			var message = new Message<Vector3f>(TypeMessage.ACC, v)
+			sendMessage(message)
+		} else if (o.type == TypeMessage.SPAWN) {
+			var body : DroneBody = o.message as DroneBody
+			this.body = body
+		} else if (o.type == TypeMessage.DELETE) {
+			killMe
 		}
-		var list : List<Cube>
-		var v = seekingFixedTarget(list, this.body)
-		var message = new Message<Vector3f>(TypeMessage.ENVOI, v)
-		sendMessage(message)
 	}
 
 	on Destroy {

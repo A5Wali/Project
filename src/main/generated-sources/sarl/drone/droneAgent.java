@@ -47,8 +47,6 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class droneAgent extends Agent {
   private DroneBody body;
   
-  private UUID id;
-  
   @SyntheticMember
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
@@ -64,19 +62,32 @@ public class droneAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$ReceivedMessage$1(final ReceivedMessage occurrence) {
     Message<Object> o = occurrence.message;
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(("Agent2 : Message reçu " + occurrence.message));
     TypeMessage _type = o.getType();
-    boolean _equals = Objects.equal(_type, TypeMessage.ENVOI);
+    boolean _equals = Objects.equal(_type, TypeMessage.ACC);
     if (_equals) {
+      Object _message = o.getMessage();
+      List<Cube> list = ((List<Cube>) _message);
+      Moving _$CAPACITY_USE$DRONE_MOVING$CALLER = this.$castSkill(Moving.class, (this.$CAPACITY_USE$DRONE_MOVING == null || this.$CAPACITY_USE$DRONE_MOVING.get() == null) ? (this.$CAPACITY_USE$DRONE_MOVING = this.$getSkill(Moving.class)) : this.$CAPACITY_USE$DRONE_MOVING);
+      Vector3f v = _$CAPACITY_USE$DRONE_MOVING$CALLER.seekingFixedTarget(list, this.body);
+      Message<Vector3f> message = new Message<Vector3f>(TypeMessage.ACC, v);
+      CommunicationCapacity _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER = this.$castSkill(CommunicationCapacity.class, (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY == null || this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY.get() == null) ? (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY = this.$getSkill(CommunicationCapacity.class)) : this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY);
+      _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER.sendMessage(message);
     } else {
+      TypeMessage _type_1 = o.getType();
+      boolean _equals_1 = Objects.equal(_type_1, TypeMessage.SPAWN);
+      if (_equals_1) {
+        Object _message_1 = o.getMessage();
+        DroneBody body = ((DroneBody) _message_1);
+        this.body = body;
+      } else {
+        TypeMessage _type_2 = o.getType();
+        boolean _equals_2 = Objects.equal(_type_2, TypeMessage.DELETE);
+        if (_equals_2) {
+          Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+          _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.killMe();
+        }
+      }
     }
-    List<Cube> list = null;
-    Moving _$CAPACITY_USE$DRONE_MOVING$CALLER = this.$castSkill(Moving.class, (this.$CAPACITY_USE$DRONE_MOVING == null || this.$CAPACITY_USE$DRONE_MOVING.get() == null) ? (this.$CAPACITY_USE$DRONE_MOVING = this.$getSkill(Moving.class)) : this.$CAPACITY_USE$DRONE_MOVING);
-    Vector3f v = _$CAPACITY_USE$DRONE_MOVING$CALLER.seekingFixedTarget(list, this.body);
-    Message<Vector3f> message = new Message<Vector3f>(TypeMessage.ENVOI, v);
-    CommunicationCapacity _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER = this.$castSkill(CommunicationCapacity.class, (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY == null || this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY.get() == null) ? (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY = this.$getSkill(CommunicationCapacity.class)) : this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY);
-    _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER.sendMessage(message);
   }
   
   @SyntheticMember
@@ -245,16 +256,6 @@ public class droneAgent extends Agent {
   @Pure
   @SyntheticMember
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    droneAgent other = (droneAgent) obj;
-    if (!java.util.Objects.equals(this.id, other.id)) {
-      return false;
-    }
     return super.equals(obj);
   }
   
@@ -263,8 +264,6 @@ public class droneAgent extends Agent {
   @SyntheticMember
   public int hashCode() {
     int result = super.hashCode();
-    final int prime = 31;
-    result = prime * result + java.util.Objects.hashCode(this.id);
     return result;
   }
   

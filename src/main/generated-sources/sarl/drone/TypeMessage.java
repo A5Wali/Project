@@ -10,5 +10,9 @@ import io.sarl.lang.annotation.SarlSpecification;
 @SarlElementType(10)
 @SuppressWarnings("all")
 public enum TypeMessage {
-  ENVOI;
+  ACC,
+  
+  SPAWN,
+  
+  DELETE;
 }

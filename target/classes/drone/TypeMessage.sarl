@@ -7,5 +7,7 @@ package drone
  * 
  */
 enum TypeMessage {
-	ENVOI;
+	ACC,
+	SPAWN,
+	DELETE;
 }
