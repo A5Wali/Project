@@ -9,6 +9,7 @@ import drone.Message;
 import drone.Moving;
 import drone.ReceivedMessage;
 import drone.SeekingSkill;
+import drone.Sphere;
 import drone.TypeMessage;
 import io.sarl.core.AgentKilled;
 import io.sarl.core.AgentSpawned;
@@ -44,8 +45,10 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlSpecification("0.5")
 @SarlElementType(16)
 @SuppressWarnings("all")
-public class droneAgent extends Agent {
+public class DroneAgent extends Agent {
   private DroneBody body;
+  
+  private Sphere target;
   
   @SyntheticMember
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
@@ -77,14 +80,20 @@ public class droneAgent extends Agent {
       boolean _equals_1 = Objects.equal(_type_1, TypeMessage.SPAWN);
       if (_equals_1) {
         Object _message_1 = o.getMessage();
-        DroneBody body = ((DroneBody) _message_1);
-        this.body = body;
+        this.body = ((DroneBody) _message_1);
       } else {
         TypeMessage _type_2 = o.getType();
         boolean _equals_2 = Objects.equal(_type_2, TypeMessage.DELETE);
         if (_equals_2) {
           Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
           _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.killMe();
+        } else {
+          TypeMessage _type_3 = o.getType();
+          boolean _equals_3 = Objects.equal(_type_3, TypeMessage.TARGET);
+          if (_equals_3) {
+            Object _message_2 = o.getMessage();
+            this.target = ((Sphere) _message_2);
+          }
         }
       }
     }
@@ -268,13 +277,13 @@ public class droneAgent extends Agent {
   }
   
   @SyntheticMember
-  public droneAgent(final UUID parentID, final UUID agentID) {
+  public DroneAgent(final UUID parentID, final UUID agentID) {
     super(parentID, agentID);
   }
   
   @SyntheticMember
   @Inject
-  public droneAgent(final BuiltinCapacitiesProvider provider, final UUID parentID, final UUID agentID) {
+  public DroneAgent(final BuiltinCapacitiesProvider provider, final UUID parentID, final UUID agentID) {
     super(provider, parentID, agentID);
   }
 }

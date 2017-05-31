@@ -20,9 +20,10 @@ import javax.vecmath.Vector3f
  * @author Alexandre
  * 
  */
-agent droneAgent {
+agent DroneAgent {
 	uses Logging, Lifecycle, CommunicationCapacity, Moving
 	private var body : DroneBody
+	private var target : drone.Sphere
 
 	on Initialize {
 		// Event trigger before the agent begin to live or to be used.
@@ -42,10 +43,11 @@ agent droneAgent {
 			var message = new Message<Vector3f>(TypeMessage.ACC, v)
 			sendMessage(message)
 		} else if (o.type == TypeMessage.SPAWN) {
-			var body : DroneBody = o.message as DroneBody
-			this.body = body
+			this.body = o.message as DroneBody
 		} else if (o.type == TypeMessage.DELETE) {
 			killMe
+		} else if (o.type == TypeMessage.TARGET) {
+			this.target = o.message as drone.Sphere
 		}
 	}
 

@@ -9,5 +9,6 @@ package drone
 enum TypeMessage {
 	ACC,
 	SPAWN,
-	DELETE;
+	DELETE,
+	TARGET;
 }

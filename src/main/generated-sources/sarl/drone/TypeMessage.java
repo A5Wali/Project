@@ -14,5 +14,7 @@ public enum TypeMessage {
   
   SPAWN,
   
-  DELETE;
+  DELETE,
+  
+  TARGET;
 }

@@ -65,7 +65,7 @@ agent ServAgent {
 		socketServer = new ServerSocket(port)
 		socket = socketServer.accept()
 	 	info("Client connected to server")
-		spawn(droneAgent)
+		spawn(DroneAgent)
 		//		spawn(testAgent2)
 	 	
 		spawn(BufferReaderAgent, socket)
