@@ -3,13 +3,14 @@
  */
 package drone
 
+import java.io.Serializable
 import javax.vecmath.Point3f
 
 /** 
  * @author Alexandre
  * 
  */
-class Cuboid extends EnvObj{
+class Cuboid extends EnvObj implements Serializable {
 	private var width : float
 	private var height : float
 	private var length : float

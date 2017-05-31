@@ -3,13 +3,14 @@
  */
 package drone
 
+import java.io.Serializable
 import javax.vecmath.Point3f
 
 /** 
  * @author Alexandre
  * 
  */
-class Cube extends EnvObj {
+class Cube extends EnvObj implements Serializable {
 	private var width : float
 	
 	new(){
@@ -30,5 +31,4 @@ class Cube extends EnvObj {
 		this.width
 	}
 }
-
 

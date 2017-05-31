@@ -2,12 +2,15 @@
  * 
  */
 package drone
+
+import java.io.Serializable
 import javax.vecmath.Point3f
+
 /** 
  * @author Alexandre
  * 
  */
-class Sphere extends EnvObj {
+class Sphere extends EnvObj implements Serializable {
 	private var radius : float
 	
 	new(){

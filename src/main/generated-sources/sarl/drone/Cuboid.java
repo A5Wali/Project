@@ -4,6 +4,7 @@ import drone.EnvObj;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
+import java.io.Serializable;
 import javax.vecmath.Point3f;
 import org.eclipse.xtext.xbase.lib.Pure;
 
@@ -13,7 +14,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlSpecification("0.5")
 @SarlElementType(8)
 @SuppressWarnings("all")
-public class Cuboid extends EnvObj {
+public class Cuboid extends EnvObj implements Serializable {
   private float width;
   
   private float height;
@@ -87,4 +88,7 @@ public class Cuboid extends EnvObj {
     result = prime * result + Float.floatToIntBits(this.length);
     return result;
   }
+  
+  @SyntheticMember
+  private final static long serialVersionUID = 4598174888L;
 }

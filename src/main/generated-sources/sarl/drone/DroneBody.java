@@ -99,4 +99,7 @@ public class DroneBody extends Cube {
     result = prime * result + Float.floatToIntBits(this.maxAcc);
     return result;
   }
+  
+  @SyntheticMember
+  private final static long serialVersionUID = 3447475766L;
 }

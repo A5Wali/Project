@@ -3,12 +3,14 @@
  */
 package drone
 
+import java.io.Serializable
 import javax.vecmath.Point3f
+
 /** 
  * @author Alexandre
  * 
  */
-class EnvObj {
+class EnvObj implements Serializable {
 	private var position : Point3f
 	
 	new(){
@@ -27,5 +29,3 @@ class EnvObj {
 		this.position
 	}
 }
-
-
