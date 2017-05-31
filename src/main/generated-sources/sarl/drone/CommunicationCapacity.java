@@ -1,6 +1,7 @@
 package drone;
 
 import drone.Message;
+import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.core.AgentTrait;
 import io.sarl.lang.core.Capacity;
@@ -9,6 +10,7 @@ import io.sarl.lang.core.Capacity;
  * @author Clément
  */
 @SarlSpecification("0.5")
+@SarlElementType(17)
 @SuppressWarnings("all")
 public interface CommunicationCapacity extends Capacity {
   public abstract void sendMessage(final Message message);

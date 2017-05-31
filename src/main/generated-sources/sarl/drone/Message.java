@@ -1,11 +1,13 @@
 package drone;
 
 import drone.TypeMessage;
+import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 @SarlSpecification("0.5")
+@SarlElementType(8)
 @SuppressWarnings("all")
 public class Message<T extends Object> {
   private TypeMessage type;
@@ -39,23 +41,6 @@ public class Message<T extends Object> {
   @Pure
   @SyntheticMember
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    Message other = (Message) obj;
-    if (this.type == null) {
-      if (other.type != null)
-        return false;
-    } else if (!this.type.equals(other.type))
-      return false;
-    if (this.message == null) {
-      if (other.message != null)
-        return false;
-    } else if (!this.message.equals(other.message))
-      return false;
     return super.equals(obj);
   }
   
@@ -63,10 +48,7 @@ public class Message<T extends Object> {
   @Pure
   @SyntheticMember
   public int hashCode() {
-    final int prime = 31;
     int result = super.hashCode();
-    result = prime * result + ((this.type== null) ? 0 : this.type.hashCode());
-    result = prime * result + ((this.message== null) ? 0 : this.message.hashCode());
     return result;
   }
 }

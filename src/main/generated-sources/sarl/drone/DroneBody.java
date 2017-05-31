@@ -1,6 +1,7 @@
 package drone;
 
 import drone.Cube;
+import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import javax.vecmath.Point3f;
@@ -11,6 +12,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
  * @author Alexandre
  */
 @SarlSpecification("0.5")
+@SarlElementType(8)
 @SuppressWarnings("all")
 public class DroneBody extends Cube {
   private Vector3f currentSpeed;
@@ -80,16 +82,6 @@ public class DroneBody extends Cube {
     if (getClass() != obj.getClass())
       return false;
     DroneBody other = (DroneBody) obj;
-    if (this.currentSpeed == null) {
-      if (other.currentSpeed != null)
-        return false;
-    } else if (!this.currentSpeed.equals(other.currentSpeed))
-      return false;
-    if (this.currentAcc == null) {
-      if (other.currentAcc != null)
-        return false;
-    } else if (!this.currentAcc.equals(other.currentAcc))
-      return false;
     if (Float.floatToIntBits(other.maxSpeed) != Float.floatToIntBits(this.maxSpeed))
       return false;
     if (Float.floatToIntBits(other.maxAcc) != Float.floatToIntBits(this.maxAcc))
@@ -101,10 +93,8 @@ public class DroneBody extends Cube {
   @Pure
   @SyntheticMember
   public int hashCode() {
-    final int prime = 31;
     int result = super.hashCode();
-    result = prime * result + ((this.currentSpeed== null) ? 0 : this.currentSpeed.hashCode());
-    result = prime * result + ((this.currentAcc== null) ? 0 : this.currentAcc.hashCode());
+    final int prime = 31;
     result = prime * result + Float.floatToIntBits(this.maxSpeed);
     result = prime * result + Float.floatToIntBits(this.maxAcc);
     return result;

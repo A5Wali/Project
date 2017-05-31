@@ -1,6 +1,7 @@
 package drone;
 
 import drone.Cuboid;
+import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import javax.vecmath.Point3f;
@@ -10,6 +11,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
  * @author Alexandre
  */
 @SarlSpecification("0.5")
+@SarlElementType(8)
 @SuppressWarnings("all")
 public class EnvObj {
   private Point3f position;
@@ -48,18 +50,6 @@ public class EnvObj {
   @Pure
   @SyntheticMember
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    EnvObj other = (EnvObj) obj;
-    if (this.position == null) {
-      if (other.position != null)
-        return false;
-    } else if (!this.position.equals(other.position))
-      return false;
     return super.equals(obj);
   }
   
@@ -67,9 +57,7 @@ public class EnvObj {
   @Pure
   @SyntheticMember
   public int hashCode() {
-    final int prime = 31;
     int result = super.hashCode();
-    result = prime * result + ((this.position== null) ? 0 : this.position.hashCode());
     return result;
   }
 }

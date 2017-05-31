@@ -43,8 +43,8 @@ agent BufferReaderAgent {
 							var map = gson.fromJson(json, Map)
 							var strUUID = map.get("UUID") as String
 							var uuid = UUID.fromString(strUUID)
-							var obj = map.get("objet") as Object
-							sendMessageToConcernedAgent(uuid, obj)
+							var message = map.get("objet") as Message
+							sendMessageToConcernedAgent(uuid, message)
 						}
 					} catch (e : InterruptedException) {
 						e.printStackTrace()
@@ -54,7 +54,7 @@ agent BufferReaderAgent {
 		});
 	}
 
-	def sendMessageToConcernedAgent(addresse : UUID, message : Object) {
+	def sendMessageToConcernedAgent(addresse : UUID, message : Message) {
 		addresse.willReceive(new drone.ReceivedMessage(message))
 	}
 
