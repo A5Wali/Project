@@ -3,14 +3,14 @@
  */
 package drone
 
-import java.io.Serializable
 import javax.vecmath.Point3f
+import javax.vecmath.Vector3f
 
 /** 
  * @author Alexandre
  * 
  */
-class Sphere extends EnvObj implements Serializable {
+class Sphere extends EnvObj {
 	private var radius : float
 	
 	new(){
@@ -31,5 +31,10 @@ class Sphere extends EnvObj implements Serializable {
 	
 	def getRadius():float{
 		this.radius
+	}
+
+	def computeForces(body : DroneBody, target : Sphere) : Vector3f {
+		var TODO : Vector3f
+		TODO
 	}
 }

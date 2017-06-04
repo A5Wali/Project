@@ -1,11 +1,13 @@
 package drone;
 
+import drone.DroneBody;
 import drone.EnvObj;
+import drone.Sphere;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
-import java.io.Serializable;
 import javax.vecmath.Point3f;
+import javax.vecmath.Vector3f;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 /**
@@ -14,7 +16,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlSpecification("0.5")
 @SarlElementType(8)
 @SuppressWarnings("all")
-public class Cuboid extends EnvObj implements Serializable {
+public class Cuboid extends EnvObj {
   private float width;
   
   private float height;
@@ -57,6 +59,15 @@ public class Cuboid extends EnvObj implements Serializable {
     return this.length;
   }
   
+  public Vector3f computeForces(final DroneBody body, final Sphere target) {
+    Vector3f _xblockexpression = null;
+    {
+      Vector3f TODO = null;
+      _xblockexpression = TODO;
+    }
+    return _xblockexpression;
+  }
+  
   @Override
   @Pure
   @SyntheticMember
@@ -90,5 +101,5 @@ public class Cuboid extends EnvObj implements Serializable {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 4598174888L;
+  private final static long serialVersionUID = 6639194240L;
 }

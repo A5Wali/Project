@@ -29,6 +29,7 @@ agent DroneAgent {
 		// You should put all the initialization statements in this block of code.
 		info("The agent was started.")
 		setSkill(new CommunicationSkill, CommunicationCapacity)
+		
 		setSkill(new SeekingSkill, Moving)
 		val message = new Message(TypeMessage.SPAWN, "")
 		sendMessage(message)
@@ -85,3 +86,4 @@ agent DroneAgent {
 		// Sent to all members of the considered super-holon.
 	}
 }
+

@@ -3,14 +3,14 @@
  */
 package drone
 
-import java.io.Serializable
 import javax.vecmath.Point3f
+import javax.vecmath.Vector3f
 
 /** 
  * @author Alexandre
  * 
  */
-class Cuboid extends EnvObj implements Serializable {
+class Cuboid extends EnvObj {
 	private var width : float
 	private var height : float
 	private var length : float
@@ -47,6 +47,11 @@ class Cuboid extends EnvObj implements Serializable {
 	
 	def getLength() : float {
 		this.length
+	}
+
+	def computeForces(body : DroneBody, target : Sphere) : Vector3f{
+		var TODO : Vector3f
+		TODO
 	}
 }
 

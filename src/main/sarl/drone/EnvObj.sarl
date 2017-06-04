@@ -5,12 +5,13 @@ package drone
 
 import java.io.Serializable
 import javax.vecmath.Point3f
+import javax.vecmath.Vector3f
 
 /** 
  * @author Alexandre
  * 
  */
-class EnvObj implements Serializable {
+abstract class EnvObj implements Serializable {
 	private var position : Point3f
 	
 	new(){
@@ -28,4 +29,6 @@ class EnvObj implements Serializable {
 	def getPosition():Point3f{
 		this.position
 	}
+	
+	abstract def computeForces(body : DroneBody, target : Sphere) : Vector3f
 }
