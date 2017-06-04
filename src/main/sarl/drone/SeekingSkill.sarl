@@ -26,7 +26,8 @@ skill SeekingSkill implements Moving {
 		info("Uninstalling the skill")
 	}
 	
-	def seekingFixedTarget(listOfObstacle : List<Cube>, body : DroneBody, target : drone.Sphere) : Vector3f {
+	def seekingFixedTarget(listOfObstacle : List<Cube>, target : drone.Sphere) : Vector3f {
+		val body : DroneBody = listOfObstacle.get(0) as DroneBody
 		val tMax : float = 10; // maximum anticipation time before collision
 		val breakZone : float = 5;
 		val stopZone : float = 1;
@@ -55,7 +56,7 @@ skill SeekingSkill implements Moving {
 			var repulsiveForce : Vector3f
 			
 			
-			for (var i : int = 0; i < listOfObstacle.length; i++) {
+			for (var i : int = 1; i < listOfObstacle.length; i++) {
 				droneToObjectVector.sub(listOfObstacle.get(i).position, body.position)
 				crossProduct.cross(droneToObjectVector, droneToTargetVector)
 				distanceOfObjectToPath = crossProduct.length / distanceDroneToTarget
