@@ -40,12 +40,12 @@ public class SeekingSkill extends Skill implements Moving {
   public Vector3f seekingFixedTarget(final List<Cube> listOfObstacle, final Sphere target) {
     Cube _get = listOfObstacle.get(0);
     final DroneBody body = ((DroneBody) _get);
-    final float breakZone = 5;
-    final float stopZone = 1;
     Vector3f droneToTargetVector = null;
     droneToTargetVector.sub(target.getPosition(), body.getPosition());
     final float distanceDroneToTarget = droneToTargetVector.length();
-    if ((distanceDroneToTarget <= stopZone)) {
+    float _stopZone = body.getStopZone();
+    boolean _lessEqualsThan = (distanceDroneToTarget <= _stopZone);
+    if (_lessEqualsThan) {
       Vector3f stopVector = body.getCurrentSpeed();
       stopVector.negate();
       return stopVector;
@@ -54,7 +54,9 @@ public class SeekingSkill extends Skill implements Moving {
       for (int i = 1; (i < ((Object[])Conversions.unwrapArray(listOfObstacle, Object.class)).length); i++) {
         newAcc.add(listOfObstacle.get(i).computeForces(body, target));
       }
-      if ((distanceDroneToTarget > breakZone)) {
+      float _breakZone = body.getBreakZone();
+      boolean _greaterThan = (distanceDroneToTarget > _breakZone);
+      if (_greaterThan) {
         float _maxSpeed = body.getMaxSpeed();
         float _length = newAcc.length();
         float _divide = (_maxSpeed / _length);
@@ -62,7 +64,8 @@ public class SeekingSkill extends Skill implements Moving {
       } else {
         float _maxSpeed_1 = body.getMaxSpeed();
         float _multiply = (_maxSpeed_1 * distanceDroneToTarget);
-        float _divide_1 = (_multiply / breakZone);
+        float _breakZone_1 = body.getBreakZone();
+        float _divide_1 = (_multiply / _breakZone_1);
         float _length_1 = newAcc.length();
         float _divide_2 = (_divide_1 / _length_1);
         newAcc.scale(_divide_2);
@@ -70,8 +73,8 @@ public class SeekingSkill extends Skill implements Moving {
       newAcc.sub(body.getCurrentSpeed());
       float _length_2 = newAcc.length();
       float _maxAcc = body.getMaxAcc();
-      boolean _greaterThan = (_length_2 > _maxAcc);
-      if (_greaterThan) {
+      boolean _greaterThan_1 = (_length_2 > _maxAcc);
+      if (_greaterThan_1) {
         float _length_3 = newAcc.length();
         float _maxAcc_1 = body.getMaxAcc();
         float _divide_3 = (_length_3 / _maxAcc_1);

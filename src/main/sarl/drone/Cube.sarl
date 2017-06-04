@@ -32,7 +32,7 @@ class Cube extends EnvObj {
 	}
 	
 	def computeForces(body : DroneBody, target : Sphere) : Vector3f {
-		val tMax : float = 10; // maximum anticipation time before collision
+		val tMax : float = body.TMax // maximum anticipation time before collision
 		var droneToObjectVector : Vector3f // vector from drone to object i
 		var droneToTargetVector : Vector3f
 		droneToTargetVector.sub(target.position, body.position) // vector from drone to target

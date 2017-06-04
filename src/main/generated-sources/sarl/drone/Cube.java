@@ -39,7 +39,7 @@ public class Cube extends EnvObj {
   }
   
   public Vector3f computeForces(final DroneBody body, final Sphere target) {
-    final float tMax = 10;
+    final float tMax = body.getTMax();
     Vector3f droneToObjectVector = null;
     Vector3f droneToTargetVector = null;
     droneToTargetVector.sub(target.getPosition(), body.getPosition());

@@ -28,13 +28,11 @@ skill SeekingSkill implements Moving {
 	
 	def seekingFixedTarget(listOfObstacle : List<Cube>, target : drone.Sphere) : Vector3f {
 		val body : DroneBody = listOfObstacle.get(0) as DroneBody
-		val breakZone : float = 5;
-		val stopZone : float = 1;
 		var droneToTargetVector : Vector3f
 		droneToTargetVector.sub(target.position, body.position) // vector from drone to target
 		val distanceDroneToTarget : float = droneToTargetVector.length // absolute distance between the drone and target
 		
-		if (distanceDroneToTarget <= stopZone) {
+		if (distanceDroneToTarget <= body.stopZone) {
 			var stopVector : Vector3f = body.currentSpeed
 			stopVector.negate
 			return stopVector 	// stop
@@ -43,10 +41,10 @@ skill SeekingSkill implements Moving {
 			for (var i : int = 1; i < listOfObstacle.length; i++) {
 				newAcc.add(listOfObstacle.get(i).computeForces(body, target))
 			}
-			if (distanceDroneToTarget > breakZone) {
+			if (distanceDroneToTarget > body.breakZone) {
 				newAcc.scale(body.maxSpeed / (newAcc.length)) 	// speed adjustment to reach desired speed
 			} else {
-				newAcc.scale((body.maxSpeed * distanceDroneToTarget / breakZone) / newAcc.length) 	// speed adjustment to break
+				newAcc.scale((body.maxSpeed * distanceDroneToTarget / body.breakZone) / newAcc.length) 		// speed adjustment to break
 			}
 			newAcc.sub(body.currentSpeed)
 			if (newAcc.length > body.maxAcc) {
