@@ -1,7 +1,7 @@
 package drone;
 
-import drone.Cube;
 import drone.DroneBody;
+import drone.EnvObj;
 import drone.Moving;
 import drone.Sphere;
 import io.sarl.core.Logging;
@@ -37,8 +37,8 @@ public class SeekingSkill extends Skill implements Moving {
   }
   
   @Pure
-  public Vector3f seekingFixedTarget(final List<Cube> listOfObstacle, final Sphere target) {
-    Cube _get = listOfObstacle.get(0);
+  public Vector3f seekingFixedTarget(final List<EnvObj> listOfObstacle, final Sphere target) {
+    EnvObj _get = listOfObstacle.get(0);
     final DroneBody body = ((DroneBody) _get);
     Vector3f droneToTargetVector = null;
     droneToTargetVector.sub(target.getPosition(), body.getPosition());

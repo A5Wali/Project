@@ -26,7 +26,7 @@ skill SeekingSkill implements Moving {
 		info("Uninstalling the skill")
 	}
 	
-	def seekingFixedTarget(listOfObstacle : List<Cube>, target : drone.Sphere) : Vector3f {
+	def seekingFixedTarget(listOfObstacle : List<EnvObj>, target : drone.Sphere) : Vector3f {
 		val body : DroneBody = listOfObstacle.get(0) as DroneBody
 		var droneToTargetVector : Vector3f
 		droneToTargetVector.sub(target.position, body.position) // vector from drone to target

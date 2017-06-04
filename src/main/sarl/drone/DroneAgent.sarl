@@ -39,7 +39,7 @@ agent DroneAgent {
 		var o  = occurrence.message ;
 //		info("Agent2 : Message reçu " + occurrence.message)
 		if(o.type == TypeMessage.ACC){
-			val list : List<Cube> = o.message as List<Cube>
+			val list : List<EnvObj> = o.message as List<EnvObj>
 			val v : Vector3f = seekingFixedTarget(list, this.target)
 			val message = new Message(TypeMessage.ACC, v)
 			sendMessage(message)

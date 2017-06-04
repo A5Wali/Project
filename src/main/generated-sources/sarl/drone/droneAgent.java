@@ -3,8 +3,8 @@ package drone;
 import com.google.common.base.Objects;
 import drone.CommunicationCapacity;
 import drone.CommunicationSkill;
-import drone.Cube;
 import drone.DroneBody;
+import drone.EnvObj;
 import drone.Message;
 import drone.Moving;
 import drone.ReceivedMessage;
@@ -67,7 +67,7 @@ public class DroneAgent extends Agent {
     boolean _equals = Objects.equal(_type, TypeMessage.ACC);
     if (_equals) {
       Object _message = o.getMessage();
-      final List<Cube> list = ((List<Cube>) _message);
+      final List<EnvObj> list = ((List<EnvObj>) _message);
       Moving _$CAPACITY_USE$DRONE_MOVING$CALLER = this.$castSkill(Moving.class, (this.$CAPACITY_USE$DRONE_MOVING == null || this.$CAPACITY_USE$DRONE_MOVING.get() == null) ? (this.$CAPACITY_USE$DRONE_MOVING = this.$getSkill(Moving.class)) : this.$CAPACITY_USE$DRONE_MOVING);
       final Vector3f v = _$CAPACITY_USE$DRONE_MOVING$CALLER.seekingFixedTarget(list, this.target);
       final Message message = new Message(TypeMessage.ACC, v);
