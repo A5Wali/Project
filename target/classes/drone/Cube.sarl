@@ -1,0 +1,95 @@
+/** 
+ * 
+ */
+package drone
+
+import javax.vecmath.Point3f
+import javax.vecmath.Vector3f
+
+/** 
+ * @author Alexandre
+ * 
+ */
+class Cube extends EnvObj {
+	private var width : float
+	
+	new(){
+		super()
+		this.width = 0.0f
+	}
+	
+	new(pos : Point3f, w : float){
+		super(pos)
+		this.width = w
+	}
+	
+	def setWidth(w : float){
+		this.width = w
+	}
+	
+	def getWidth() : float {
+		this.width
+	}
+	
+	def computeForces(body : DroneBody, target : Sphere) : Vector3f {
+		val tMax : float = body.TMax // maximum anticipation time before collision
+		var droneToObjectVector : Vector3f // vector from drone to object i
+		var droneToTargetVector : Vector3f
+		droneToTargetVector.sub(target.position, body.position) // vector from drone to target
+		val distanceDroneToTarget : float = droneToTargetVector.length // absolute distance between the drone and target
+		var newAcc : Vector3f // acceleration to return after some modifications
+		val currentSpeed : float = body.currentSpeed.length
+		var distanceOfObjectToPath : float // ditance between object i to droneToTargetPath
+			var crossProduct : Vector3f
+		var distanceDroneToObject : float // distance drone to object i
+		var objectToTargetVector : Vector3f
+		var timeToCollision : float
+		var slidingForceH : Vector3f
+		var slidingForceV : Vector3f
+		var slidingForce : Vector3f
+		val scaledDroneToTargetVectorLength : float = droneToTargetVector.length / 5
+		val protectingSphere : float = 5
+		var repulsiveForce : Vector3f
+
+		droneToObjectVector.sub(this.position, body.position)
+		crossProduct.cross(droneToObjectVector, droneToTargetVector)
+		distanceOfObjectToPath = crossProduct.length / distanceDroneToTarget
+		distanceDroneToObject = droneToObjectVector.length
+
+		// collision detection:
+		if (distanceOfObjectToPath < (this.width / 2 + (body as Cube).width / 2)) {
+			distanceDroneToObject = droneToObjectVector.length
+			timeToCollision = distanceDroneToObject / currentSpeed
+			objectToTargetVector.sub(target.position, this.position)
+
+			// Sliding Force:
+			if ((distanceDroneToObject < distanceDroneToTarget) && (objectToTargetVector.length < distanceDroneToTarget) && (timeToCollision < tMax)) { // = the object is between target and drone & we are in anticipation time
+				// Horizontal sliding Force:
+				slidingForceH.cross(droneToObjectVector, new Vector3f(0, 1, 0))
+				if ((slidingForceH.dot(droneToTargetVector) ) < 0) {
+					slidingForceH.scale(-1)
+				}
+
+				// Vertical sliding Force:
+				slidingForceV.cross(droneToObjectVector, new Vector3f(0, 0, 1))
+				if ((slidingForceV.dot(droneToTargetVector) ) < 0) {
+					slidingForceV.scale(-1)
+				}
+				slidingForce.add(slidingForceV, slidingForceH)
+				slidingForce.scale(scaledDroneToTargetVectorLength / slidingForce.length)
+				slidingForce.scale(1 / timeToCollision - 1 / tMax)
+				newAcc.add(slidingForce)
+			}
+		}
+
+		// We add a Repulsive force in Protected area:
+		if (distanceDroneToObject < protectingSphere) {
+			repulsiveForce = droneToObjectVector
+			repulsiveForce.negate
+			repulsiveForce.scale(scaledDroneToTargetVectorLength / repulsiveForce.length)
+			repulsiveForce.scale(1 / distanceDroneToObject - 1 / protectingSphere)
+			newAcc.add(repulsiveForce)
+		}
+		return newAcc
+	}
+}

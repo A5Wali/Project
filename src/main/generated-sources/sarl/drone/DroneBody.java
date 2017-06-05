@@ -17,8 +17,6 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class DroneBody extends Cube {
   private Vector3f currentSpeed;
   
-  private Vector3f currentAcc;
-  
   private float maxSpeed;
   
   private float maxAcc;
@@ -33,8 +31,6 @@ public class DroneBody extends Cube {
     super();
     Vector3f _vector3f = new Vector3f();
     this.currentSpeed = _vector3f;
-    Vector3f _vector3f_1 = new Vector3f();
-    this.currentAcc = _vector3f_1;
     this.maxAcc = 5;
     this.maxSpeed = 20;
     this.tMax = 10;
@@ -46,8 +42,6 @@ public class DroneBody extends Cube {
     super(pos, w);
     Vector3f _vector3f = new Vector3f();
     this.currentSpeed = _vector3f;
-    Vector3f _vector3f_1 = new Vector3f();
-    this.currentAcc = _vector3f_1;
     this.maxSpeed = maxS;
     this.maxAcc = maxA;
     this.tMax = tMax;
@@ -59,18 +53,9 @@ public class DroneBody extends Cube {
     return this.currentSpeed = cS;
   }
   
-  public Vector3f setCurrentAcc(final Vector3f cA) {
-    return this.currentAcc = cA;
-  }
-  
   @Pure
   public Vector3f getCurrentSpeed() {
     return this.currentSpeed;
-  }
-  
-  @Pure
-  public Vector3f getCurrentAcc() {
-    return this.currentAcc;
   }
   
   @Pure
@@ -137,5 +122,5 @@ public class DroneBody extends Cube {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 7867214402L;
+  private final static long serialVersionUID = 9826634484L;
 }

@@ -1,0 +1,57 @@
+/** 
+ * 
+ */
+package drone
+
+import io.sarl.core.Logging
+import java.util.List
+import javax.vecmath.Vector3f
+
+/** 
+ * @author Alexandre
+ * 
+ */
+skill SeekingSkill implements Moving {
+	uses Logging
+
+	def install {
+		// Function invoked when the skill is installed in the owner.
+		// You should put all the initialization statements in this block of code.
+		info("Installing the skill")
+	}
+
+	def uninstall {
+		// Function invoked when the skill is uninstalled from the owner.
+		// You should put all the resource release statements in this block of code.
+		info("Uninstalling the skill")
+	}
+	
+	def seekingFixedTarget(listOfObstacle : List<EnvObj>, target : drone.Sphere) : Vector3f {
+		val body : DroneBody = listOfObstacle.get(0) as DroneBody
+		var droneToTargetVector : Vector3f
+		droneToTargetVector.sub(target.position, body.position) // vector from drone to target
+		val distanceDroneToTarget : float = droneToTargetVector.length // absolute distance between the drone and target
+		
+		if (distanceDroneToTarget <= body.stopZone) {
+			var stopVector : Vector3f = body.currentSpeed
+			stopVector.negate
+			return stopVector 	// stop
+		} else {
+			var newAcc : Vector3f = droneToTargetVector // acceleration to return after some modifications
+			for (var i : int = 1; i < listOfObstacle.length; i++) {
+				newAcc.add(listOfObstacle.get(i).computeForces(body, target))
+			}
+			if (distanceDroneToTarget > body.breakZone) {
+				newAcc.scale(body.maxSpeed / (newAcc.length)) 	// speed adjustment to reach desired speed
+			} else {
+				newAcc.scale((body.maxSpeed * distanceDroneToTarget / body.breakZone) / newAcc.length) 		// speed adjustment to break
+			}
+			newAcc.sub(body.currentSpeed)
+			if (newAcc.length > body.maxAcc) {
+				newAcc.scale( newAcc.length/ body.maxAcc) // acceleration adjustment to respect max Acceleration
+			}
+			return newAcc
+		}
+	}
+}
+
