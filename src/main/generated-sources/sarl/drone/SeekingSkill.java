@@ -1,6 +1,7 @@
 package drone;
 
 import drone.DroneBody;
+import drone.EnvObj;
 import drone.Moving;
 import drone.Sphere;
 import io.sarl.core.Logging;
@@ -37,8 +38,9 @@ public class SeekingSkill extends Skill implements Moving {
   }
   
   @Pure
-  public Vector3f seekingFixedTarget(final List<DroneBody> listOfObstacle, final Sphere target) {
-    final DroneBody body = listOfObstacle.get(0);
+  public Vector3f seekingFixedTarget(final List<EnvObj> listOfObstacle, final Sphere target) {
+    EnvObj _get = listOfObstacle.get(0);
+    final DroneBody body = ((DroneBody) _get);
     Vector3f droneToTargetVector = new Vector3f();
     Point3f tarPos = target.getPosition();
     Point3f bodyPos = body.getPosition();
@@ -59,26 +61,29 @@ public class SeekingSkill extends Skill implements Moving {
       boolean _greaterThan = (distanceDroneToTarget > _breakZone);
       if (_greaterThan) {
         float _maxSpeed = body.getMaxSpeed();
-        float _length = newAcc.length();
-        float _divide = (_maxSpeed / _length);
+        float _length = body.getCurrentSpeed().length();
+        float _minus = (_maxSpeed - _length);
+        float _length_1 = newAcc.length();
+        float _divide = (_minus / _length_1);
         newAcc.scale(_divide);
       } else {
         float _maxSpeed_1 = body.getMaxSpeed();
         float _multiply = (_maxSpeed_1 * distanceDroneToTarget);
         float _breakZone_1 = body.getBreakZone();
         float _divide_1 = (_multiply / _breakZone_1);
-        float _length_1 = newAcc.length();
-        float _divide_2 = (_divide_1 / _length_1);
+        float _length_2 = body.getCurrentSpeed().length();
+        float _minus_1 = (_divide_1 - _length_2);
+        float _length_3 = newAcc.length();
+        float _divide_2 = (_minus_1 / _length_3);
         newAcc.scale(_divide_2);
       }
-      newAcc.sub(body.getCurrentSpeed());
-      float _length_2 = newAcc.length();
+      float _length_4 = newAcc.length();
       float _maxAcc = body.getMaxAcc();
-      boolean _greaterThan_1 = (_length_2 > _maxAcc);
+      boolean _greaterThan_1 = (_length_4 > _maxAcc);
       if (_greaterThan_1) {
-        float _length_3 = newAcc.length();
         float _maxAcc_1 = body.getMaxAcc();
-        float _divide_3 = (_length_3 / _maxAcc_1);
+        float _length_5 = newAcc.length();
+        float _divide_3 = (_maxAcc_1 / _length_5);
         newAcc.scale(_divide_3);
       }
       return newAcc;

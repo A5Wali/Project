@@ -26,9 +26,10 @@ skill SeekingSkill implements Moving {
 		info("Uninstalling the skill")
 	}
 	
-	def seekingFixedTarget(listOfObstacle : List<DroneBody>, target : drone.Sphere) : Vector3f {
+	def seekingFixedTarget(listOfObstacle : List<EnvObj>, target : drone.Sphere
+	) : Vector3f {
 
-		val body : DroneBody = listOfObstacle.get(0)
+		val body : DroneBody = listOfObstacle.get(0) as DroneBody
 		var droneToTargetVector = new Vector3f
 		var tarPos = target.position
 		var bodyPos = body.position
@@ -45,13 +46,12 @@ skill SeekingSkill implements Moving {
 				newAcc.add(listOfObstacle.get(i).computeForces(body, target))
 			}
 			if (distanceDroneToTarget > body.breakZone) {
-				newAcc.scale(body.maxSpeed / (newAcc.length)) 	// speed adjustment to reach desired speed
+				newAcc.scale((body.maxSpeed - body.currentSpeed.length) / newAcc.length) 	// speed adjustment to reach desired speed
 			} else {
-				newAcc.scale((body.maxSpeed * distanceDroneToTarget / body.breakZone) / newAcc.length) 		// speed adjustment to break
+				newAcc.scale((body.maxSpeed * distanceDroneToTarget / body.breakZone - body.currentSpeed.length) / newAcc.length) 		// speed adjustment to break
 			}
-			newAcc.sub(body.currentSpeed)
 			if (newAcc.length > body.maxAcc) {
-				newAcc.scale( newAcc.length/ body.maxAcc) // acceleration adjustment to respect max Acceleration
+				newAcc.scale( body.maxAcc/ newAcc.length) // acceleration adjustment to respect max Acceleration
 			}
 			return newAcc
 		}
