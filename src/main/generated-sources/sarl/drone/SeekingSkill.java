@@ -1,7 +1,8 @@
 package drone;
 
+import drone.AccelerationMessage;
+import drone.Cube;
 import drone.DroneBody;
-import drone.EnvObj;
 import drone.Moving;
 import drone.Sphere;
 import io.sarl.core.Logging;
@@ -12,7 +13,7 @@ import io.sarl.lang.annotation.SyntheticMember;
 import io.sarl.lang.core.Agent;
 import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
-import java.util.List;
+import java.util.ArrayList;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 import org.eclipse.xtext.xbase.lib.Conversions;
@@ -38,9 +39,12 @@ public class SeekingSkill extends Skill implements Moving {
   }
   
   @Pure
-  public Vector3f seekingFixedTarget(final List<EnvObj> listOfObstacle, final Sphere target) {
-    EnvObj _get = listOfObstacle.get(0);
-    final DroneBody body = ((DroneBody) _get);
+  public Vector3f seekingFixedTarget(final AccelerationMessage accelerationMessage, final Sphere target) {
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    ArrayList<Cube> _frustum = accelerationMessage.getFrustum();
+    String _plus = ("Frustum : " + _frustum);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
+    final DroneBody body = accelerationMessage.getDroneBody();
     Vector3f droneToTargetVector = new Vector3f();
     Point3f tarPos = target.getPosition();
     Point3f bodyPos = body.getPosition();
@@ -54,8 +58,8 @@ public class SeekingSkill extends Skill implements Moving {
       return stopVector;
     } else {
       Vector3f newAcc = droneToTargetVector;
-      for (int i = 1; (i < ((Object[])Conversions.unwrapArray(listOfObstacle, Object.class)).length); i++) {
-        newAcc.add(listOfObstacle.get(i).computeForces(body, target));
+      for (int i = 1; (i < ((Object[])Conversions.unwrapArray(accelerationMessage.getFrustum(), Object.class)).length); i++) {
+        newAcc.add(accelerationMessage.getFrustum().get(i).computeForces(body, target));
       }
       float _breakZone = body.getBreakZone();
       boolean _greaterThan = (distanceDroneToTarget > _breakZone);

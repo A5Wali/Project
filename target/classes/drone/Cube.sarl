@@ -5,12 +5,15 @@ package drone
 
 import javax.vecmath.Point3f
 import javax.vecmath.Vector3f
+import io.sarl.core.Logging
 
 /** 
  * @author Alexandre
  * 
  */
 class Cube extends EnvObj {
+	
+	
 	private var width : float
 	
 	new(){
@@ -34,31 +37,31 @@ class Cube extends EnvObj {
 	@Override
 	def computeForces(body : DroneBody, target : Sphere) : Vector3f {
 		val tMax : float = body.TMax // maximum anticipation time before collision
-		var droneToObjectVector : Vector3f // vector from drone to object i
-		var droneToTargetVector : Vector3f
+		var droneToObjectVector : Vector3f = new Vector3f // vector from drone to object i
+		var droneToTargetVector : Vector3f = new Vector3f
 		droneToTargetVector.sub(target.position, body.position) // vector from drone to target
 		val distanceDroneToTarget : float = droneToTargetVector.length // absolute distance between the drone and target
-		var newAcc : Vector3f // acceleration to return after some modifications
+		var newAcc : Vector3f = new Vector3f // acceleration to return after some modifications
 		val currentSpeed : float = body.currentSpeed.length
 		var distanceOfObjectToPath : float // ditance between object i to droneToTargetPath
-			var crossProduct : Vector3f
+			var crossProduct : Vector3f = new Vector3f
 		var distanceDroneToObject : float // distance drone to object i
-		var objectToTargetVector : Vector3f
+		var objectToTargetVector : Vector3f = new Vector3f
 		var timeToCollision : float
-		var slidingForceH : Vector3f
-		var slidingForceV : Vector3f
-		var slidingForce : Vector3f
+		var slidingForceH : Vector3f = new Vector3f
+		var slidingForceV : Vector3f = new Vector3f
+		var slidingForce : Vector3f = new Vector3f
 		val scaledDroneToTargetVectorLength : float = droneToTargetVector.length / 5
 		val protectingSphere : float = 5
-		var repulsiveForce : Vector3f
+		var repulsiveForce : Vector3f = new Vector3f
 
 		droneToObjectVector.sub(this.position, body.position)
 		crossProduct.cross(droneToObjectVector, droneToTargetVector)
 		distanceOfObjectToPath = crossProduct.length / distanceDroneToTarget
 		distanceDroneToObject = droneToObjectVector.length
-
+		println("--length : " + distanceDroneToObject + "\n\r Drone pos : " + body.position + "\n\r CubePos : " + this.position)
 		// collision detection:
-		if (distanceOfObjectToPath < (this.width / 2 + (body as Cube).width / 2)) {
+		if (distanceOfObjectToPath < 5*(this.width / 2 + (body as Cube).width / 2)) {
 			distanceDroneToObject = droneToObjectVector.length
 			timeToCollision = distanceDroneToObject / currentSpeed
 			objectToTargetVector.sub(target.position, this.position)
@@ -91,6 +94,8 @@ class Cube extends EnvObj {
 			repulsiveForce.scale(1 / distanceDroneToObject - 1 / protectingSphere)
 			newAcc.add(repulsiveForce)
 		}
+		
+		newAcc.scale(5)
 		return newAcc
 	}
 }

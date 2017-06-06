@@ -42,7 +42,6 @@ agent BufferReaderAgent {
 							var json = reader.readLine
 							info("Line json : " + json)
 							var message = gson.fromJson(json, Message)
-							info("UUID : " + message.UUID + ",\r\n\tMessage : " + Message);
 							var uuid = message.UUID
 							sendMessageToConcernedAgent(uuid, message)
 						}

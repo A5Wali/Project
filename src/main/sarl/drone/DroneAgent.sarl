@@ -40,12 +40,12 @@ agent DroneAgent {
 
 	on ReceivedMessage {
 		var o  = occurrence.message ;
-		info("Agent2 : Message received " + occurrence.message)
+		//info("Agent2 : Message received " + occurrence.message)
 		var g = new Gson();
 		if(o.type == TypeMessage.ACC){
-			var token = new TypeToken<List<EnvObj>>(){}
-			val list : List<EnvObj> = g.fromJson(o.message,token.getType)
-			val v : Vector3f = seekingFixedTarget(list, this.target)
+			var token = new TypeToken<AccelerationMessage>(){}
+			val messageRx : AccelerationMessage = g.fromJson(o.message, token.getType)
+			val v : Vector3f = seekingFixedTarget(messageRx, this.target)
 			info("Acceleration : " + v)
 			val message = new Message(TypeMessage.ACC, v)
 			sendMessage(message)

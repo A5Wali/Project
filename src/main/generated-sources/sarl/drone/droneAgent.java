@@ -3,6 +3,7 @@ package drone;
 import com.google.common.base.Objects;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import drone.AccelerationMessage;
 import drone.CommunicationCapacity;
 import drone.CommunicationSkill;
 import drone.DroneBody;
@@ -32,7 +33,6 @@ import io.sarl.lang.core.BuiltinCapacitiesProvider;
 import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
 import javax.vecmath.Vector3f;
@@ -64,19 +64,17 @@ public class DroneAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$ReceivedMessage$1(final ReceivedMessage occurrence) {
     Message o = occurrence.message;
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(("Agent2 : Message received " + occurrence.message));
     Gson g = new Gson();
     TypeMessage _type = o.getType();
     boolean _equals = Objects.equal(_type, TypeMessage.ACC);
     if (_equals) {
-      TypeToken<List<DroneBody>> token = new TypeToken<List<DroneBody>>() {
+      TypeToken<AccelerationMessage> token = new TypeToken<AccelerationMessage>() {
       };
-      final List<DroneBody> list = g.<List<DroneBody>>fromJson(o.getMessage(), token.getType());
+      final AccelerationMessage messageRx = g.<AccelerationMessage>fromJson(o.getMessage(), token.getType());
       Moving _$CAPACITY_USE$DRONE_MOVING$CALLER = this.$castSkill(Moving.class, (this.$CAPACITY_USE$DRONE_MOVING == null || this.$CAPACITY_USE$DRONE_MOVING.get() == null) ? (this.$CAPACITY_USE$DRONE_MOVING = this.$getSkill(Moving.class)) : this.$CAPACITY_USE$DRONE_MOVING);
-      final Vector3f v = _$CAPACITY_USE$DRONE_MOVING$CALLER.seekingFixedTarget(list, this.target);
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(("Acceleration : " + v));
+      final Vector3f v = _$CAPACITY_USE$DRONE_MOVING$CALLER.seekingFixedTarget(messageRx, this.target);
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(("Acceleration : " + v));
       final Message message = new Message(TypeMessage.ACC, v);
       CommunicationCapacity _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER = this.$castSkill(CommunicationCapacity.class, (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY == null || this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY.get() == null) ? (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY = this.$getSkill(CommunicationCapacity.class)) : this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY);
       _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER.sendMessage(message);
@@ -96,8 +94,8 @@ public class DroneAgent extends Agent {
           boolean _equals_3 = Objects.equal(_type_3, TypeMessage.TARGET);
           if (_equals_3) {
             this.target = g.<Sphere>fromJson(o.getMessage(), Sphere.class);
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(Float.valueOf(this.target.getRadius()));
+            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(Float.valueOf(this.target.getRadius()));
           }
         }
       }

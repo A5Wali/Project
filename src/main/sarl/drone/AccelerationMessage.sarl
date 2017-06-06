@@ -1,0 +1,44 @@
+/** 
+ * 
+ */
+package drone
+
+import java.util.ArrayList
+
+/** 
+ * @author Utilisateur
+ * 
+ */
+class AccelerationMessage {
+
+var droneBody : DroneBody
+var frustum : ArrayList<Cube>
+
+new()
+{
+	droneBody = new DroneBody
+	frustum = new ArrayList<Cube>
+}
+
+def getDroneBody : DroneBody
+{
+	droneBody
+}
+
+def setDroneBody(db : DroneBody)
+{
+	droneBody = db
+}
+
+def getFrustum : ArrayList<Cube>
+{
+	frustum
+}
+
+def setFrustum(fr : ArrayList<Cube>)
+{
+	frustum = fr
+}
+	
+	
+}

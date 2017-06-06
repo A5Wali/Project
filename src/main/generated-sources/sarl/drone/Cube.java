@@ -8,6 +8,7 @@ import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 /**
@@ -41,31 +42,37 @@ public class Cube extends EnvObj {
   @Override
   public Vector3f computeForces(final DroneBody body, final Sphere target) {
     final float tMax = body.getTMax();
-    Vector3f droneToObjectVector = null;
-    Vector3f droneToTargetVector = null;
+    Vector3f droneToObjectVector = new Vector3f();
+    Vector3f droneToTargetVector = new Vector3f();
     droneToTargetVector.sub(target.getPosition(), body.getPosition());
     final float distanceDroneToTarget = droneToTargetVector.length();
-    Vector3f newAcc = null;
+    Vector3f newAcc = new Vector3f();
     final float currentSpeed = body.getCurrentSpeed().length();
     float distanceOfObjectToPath = 0;
-    Vector3f crossProduct = null;
+    Vector3f crossProduct = new Vector3f();
     float distanceDroneToObject = 0;
-    Vector3f objectToTargetVector = null;
+    Vector3f objectToTargetVector = new Vector3f();
     float timeToCollision = 0;
-    Vector3f slidingForceH = null;
-    Vector3f slidingForceV = null;
-    Vector3f slidingForce = null;
+    Vector3f slidingForceH = new Vector3f();
+    Vector3f slidingForceV = new Vector3f();
+    Vector3f slidingForce = new Vector3f();
     float _length = droneToTargetVector.length();
     final float scaledDroneToTargetVectorLength = (_length / 5);
     final float protectingSphere = 5;
-    Vector3f repulsiveForce = null;
+    Vector3f repulsiveForce = new Vector3f();
     droneToObjectVector.sub(this.getPosition(), body.getPosition());
     crossProduct.cross(droneToObjectVector, droneToTargetVector);
     float _length_1 = crossProduct.length();
     float _divide = (_length_1 / distanceDroneToTarget);
     distanceOfObjectToPath = _divide;
     distanceDroneToObject = droneToObjectVector.length();
-    if ((distanceOfObjectToPath < ((this.width / 2) + (((Cube) body).width / 2)))) {
+    Point3f _position = body.getPosition();
+    String _plus = ((("--length : " + Float.valueOf(distanceDroneToObject)) + "\n\r Drone pos : ") + _position);
+    String _plus_1 = (_plus + "\n\r CubePos : ");
+    Point3f _position_1 = this.getPosition();
+    String _plus_2 = (_plus_1 + _position_1);
+    InputOutput.<String>println(_plus_2);
+    if ((distanceOfObjectToPath < (5 * ((this.width / 2) + (((Cube) body).width / 2))))) {
       distanceDroneToObject = droneToObjectVector.length();
       timeToCollision = (distanceDroneToObject / currentSpeed);
       objectToTargetVector.sub(target.getPosition(), this.getPosition());
@@ -101,6 +108,7 @@ public class Cube extends EnvObj {
       repulsiveForce.scale(((1 / distanceDroneToObject) - (1 / protectingSphere)));
       newAcc.add(repulsiveForce);
     }
+    newAcc.scale(5);
     return newAcc;
   }
   
