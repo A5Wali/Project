@@ -38,6 +38,7 @@ public class Cube extends EnvObj {
     return this.width;
   }
   
+  @Override
   public Vector3f computeForces(final DroneBody body, final Sphere target) {
     final float tMax = body.getTMax();
     Vector3f droneToObjectVector = null;

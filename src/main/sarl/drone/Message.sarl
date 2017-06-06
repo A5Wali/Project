@@ -6,36 +6,59 @@ package drone
  * @author Clément
  * 
  */
- import drone.TypeMessage
+
+import java.util.List
+import com.google.gson.Gson
+
 class Message{
 	
-	var type : drone.TypeMessage
-	var message : Object
+	var type : TypeMessage
+	var message : String
 	var UUID : java.util.UUID
 	
-	new(t : TypeMessage, m : Object){
+	new(t : TypeMessage, m : String) {
 		type = t
 		message = m
 	}
 
-	new(t : TypeMessage, m : Object, uuid : java.util.UUID) {
+	new(t : TypeMessage, m : Object) {
+		var g = new Gson()
+		type = t
+		message = g.toJson(m)
+	}
+
+	new(t : TypeMessage, m : String, uuid : java.util.UUID) {
 		type = t
 		message = m
 		UUID = uuid
+	}
+
+	new(t : TypeMessage, m : Object, uuid : java.util.UUID) {
+		var g = new Gson()
+		type = t
+		message = g.toJson(m)
+		UUID = uuid
+	}
+	
+	def toString() : String
+	{
+		return "Type : " + type + ", Message : " + message;
 	}
 	
 	def getType() : TypeMessage{
 		return type
 	}
 	
+	
 	def setType(type : TypeMessage){
 		this.type = type;
 	}
 	
-	def getMessage() : Object{
+	def getMessage() : String {
 		return message;
 	}
-	def setMessage(message : Object){
+	
+	def setMessage(message : String) {
 		this.message = message
 	}
 	
@@ -48,4 +71,5 @@ class Message{
 	{
 		UUID = uuid
 	}
+	
 }

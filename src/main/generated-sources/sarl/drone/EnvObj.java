@@ -16,7 +16,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlSpecification("0.5")
 @SarlElementType(8)
 @SuppressWarnings("all")
-public abstract class EnvObj implements Serializable {
+public class EnvObj implements Serializable {
   private Point3f position;
   
   public EnvObj() {
@@ -37,7 +37,9 @@ public abstract class EnvObj implements Serializable {
     return this.position;
   }
   
-  public abstract Vector3f computeForces(final DroneBody body, final Sphere target);
+  public Vector3f computeForces(final DroneBody body, final Sphere target) {
+    return null;
+  }
   
   @Override
   @Pure

@@ -13,8 +13,11 @@ import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
 import io.sarl.core.MemberJoined
 import io.sarl.core.MemberLeft
-import java.util.List
+import java.util.ArrayList
 import javax.vecmath.Vector3f
+import java.util.List
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 /** 
  * 
@@ -37,18 +40,22 @@ agent DroneAgent {
 
 	on ReceivedMessage {
 		var o  = occurrence.message ;
-//		info("Agent2 : Message reçu " + occurrence.message)
+		info("Agent2 : Message received " + occurrence.message)
+		var g = new Gson();
 		if(o.type == TypeMessage.ACC){
-			val list : List<EnvObj> = o.message as List<EnvObj>
+			var token = new TypeToken<List<DroneBody>>(){}
+			val list : List<DroneBody> = g.fromJson(o.message,token.getType)
 			val v : Vector3f = seekingFixedTarget(list, this.target)
+			info("Acceleration : " + v)
 			val message = new Message(TypeMessage.ACC, v)
 			sendMessage(message)
 		} else if (o.type == TypeMessage.SPAWN) {
-			this.body = o.message as DroneBody
+			this.body = g.fromJson(o.message, DroneBody)
 		} else if (o.type == TypeMessage.DELETE) {
 			killMe
 		} else if (o.type == TypeMessage.TARGET) {
-			this.target = o.message as Sphere
+			this.target = g.fromJson(o.message, Sphere)
+			info(target.radius)
 		}
 	}
 

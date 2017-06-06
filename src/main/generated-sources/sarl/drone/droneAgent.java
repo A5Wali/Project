@@ -1,10 +1,11 @@
 package drone;
 
 import com.google.common.base.Objects;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import drone.CommunicationCapacity;
 import drone.CommunicationSkill;
 import drone.DroneBody;
-import drone.EnvObj;
 import drone.Message;
 import drone.Moving;
 import drone.ReceivedMessage;
@@ -63,13 +64,19 @@ public class DroneAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$ReceivedMessage$1(final ReceivedMessage occurrence) {
     Message o = occurrence.message;
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(("Agent2 : Message received " + occurrence.message));
+    Gson g = new Gson();
     TypeMessage _type = o.getType();
     boolean _equals = Objects.equal(_type, TypeMessage.ACC);
     if (_equals) {
-      Object _message = o.getMessage();
-      final List<EnvObj> list = ((List<EnvObj>) _message);
+      TypeToken<List<DroneBody>> token = new TypeToken<List<DroneBody>>() {
+      };
+      final List<DroneBody> list = g.<List<DroneBody>>fromJson(o.getMessage(), token.getType());
       Moving _$CAPACITY_USE$DRONE_MOVING$CALLER = this.$castSkill(Moving.class, (this.$CAPACITY_USE$DRONE_MOVING == null || this.$CAPACITY_USE$DRONE_MOVING.get() == null) ? (this.$CAPACITY_USE$DRONE_MOVING = this.$getSkill(Moving.class)) : this.$CAPACITY_USE$DRONE_MOVING);
       final Vector3f v = _$CAPACITY_USE$DRONE_MOVING$CALLER.seekingFixedTarget(list, this.target);
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(("Acceleration : " + v));
       final Message message = new Message(TypeMessage.ACC, v);
       CommunicationCapacity _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER = this.$castSkill(CommunicationCapacity.class, (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY == null || this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY.get() == null) ? (this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY = this.$getSkill(CommunicationCapacity.class)) : this.$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY);
       _$CAPACITY_USE$DRONE_COMMUNICATIONCAPACITY$CALLER.sendMessage(message);
@@ -77,8 +84,7 @@ public class DroneAgent extends Agent {
       TypeMessage _type_1 = o.getType();
       boolean _equals_1 = Objects.equal(_type_1, TypeMessage.SPAWN);
       if (_equals_1) {
-        Object _message_1 = o.getMessage();
-        this.body = ((DroneBody) _message_1);
+        this.body = g.<DroneBody>fromJson(o.getMessage(), DroneBody.class);
       } else {
         TypeMessage _type_2 = o.getType();
         boolean _equals_2 = Objects.equal(_type_2, TypeMessage.DELETE);
@@ -89,8 +95,9 @@ public class DroneAgent extends Agent {
           TypeMessage _type_3 = o.getType();
           boolean _equals_3 = Objects.equal(_type_3, TypeMessage.TARGET);
           if (_equals_3) {
-            Object _message_2 = o.getMessage();
-            this.target = ((Sphere) _message_2);
+            this.target = g.<Sphere>fromJson(o.getMessage(), Sphere.class);
+            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(Float.valueOf(this.target.getRadius()));
           }
         }
       }

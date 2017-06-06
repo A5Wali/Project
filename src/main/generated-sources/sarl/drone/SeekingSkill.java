@@ -1,7 +1,6 @@
 package drone;
 
 import drone.DroneBody;
-import drone.EnvObj;
 import drone.Moving;
 import drone.Sphere;
 import io.sarl.core.Logging;
@@ -13,6 +12,7 @@ import io.sarl.lang.core.Agent;
 import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
 import java.util.List;
+import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Extension;
@@ -37,11 +37,12 @@ public class SeekingSkill extends Skill implements Moving {
   }
   
   @Pure
-  public Vector3f seekingFixedTarget(final List<EnvObj> listOfObstacle, final Sphere target) {
-    EnvObj _get = listOfObstacle.get(0);
-    final DroneBody body = ((DroneBody) _get);
-    Vector3f droneToTargetVector = null;
-    droneToTargetVector.sub(target.getPosition(), body.getPosition());
+  public Vector3f seekingFixedTarget(final List<DroneBody> listOfObstacle, final Sphere target) {
+    final DroneBody body = listOfObstacle.get(0);
+    Vector3f droneToTargetVector = new Vector3f();
+    Point3f tarPos = target.getPosition();
+    Point3f bodyPos = body.getPosition();
+    droneToTargetVector.sub(tarPos, bodyPos);
     final float distanceDroneToTarget = droneToTargetVector.length();
     float _stopZone = body.getStopZone();
     boolean _lessEqualsThan = (distanceDroneToTarget <= _stopZone);
