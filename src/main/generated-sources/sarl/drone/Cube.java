@@ -8,7 +8,6 @@ import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 /**
@@ -66,13 +65,7 @@ public class Cube extends EnvObj {
     float _divide = (_length_1 / distanceDroneToTarget);
     distanceOfObjectToPath = _divide;
     distanceDroneToObject = droneToObjectVector.length();
-    Point3f _position = body.getPosition();
-    String _plus = ((("--length : " + Float.valueOf(distanceDroneToObject)) + "\n\r Drone pos : ") + _position);
-    String _plus_1 = (_plus + "\n\r CubePos : ");
-    Point3f _position_1 = this.getPosition();
-    String _plus_2 = (_plus_1 + _position_1);
-    InputOutput.<String>println(_plus_2);
-    if ((distanceOfObjectToPath < (5 * ((this.width / 2) + (((Cube) body).width / 2))))) {
+    if ((distanceOfObjectToPath < ((this.width / 2) + ((Cube) body).width))) {
       distanceDroneToObject = droneToObjectVector.length();
       timeToCollision = (distanceDroneToObject / currentSpeed);
       objectToTargetVector.sub(target.getPosition(), this.getPosition());
@@ -108,7 +101,6 @@ public class Cube extends EnvObj {
       repulsiveForce.scale(((1 / distanceDroneToObject) - (1 / protectingSphere)));
       newAcc.add(repulsiveForce);
     }
-    newAcc.scale(5);
     return newAcc;
   }
   

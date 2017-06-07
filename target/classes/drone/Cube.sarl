@@ -5,7 +5,6 @@ package drone
 
 import javax.vecmath.Point3f
 import javax.vecmath.Vector3f
-import io.sarl.core.Logging
 
 /** 
  * @author Alexandre
@@ -59,9 +58,9 @@ class Cube extends EnvObj {
 		crossProduct.cross(droneToObjectVector, droneToTargetVector)
 		distanceOfObjectToPath = crossProduct.length / distanceDroneToTarget
 		distanceDroneToObject = droneToObjectVector.length
-		println("--length : " + distanceDroneToObject + "\n\r Drone pos : " + body.position + "\n\r CubePos : " + this.position)
+		//println("--length : " + distanceDroneToObject + "\n\r Drone pos : " + body.position + "\n\r CubePos : " + this.position)
 		// collision detection:
-		if (distanceOfObjectToPath < 5*(this.width / 2 + (body as Cube).width / 2)) {
+		if (distanceOfObjectToPath < (this.width / 2 + (body as Cube).width)) {
 			distanceDroneToObject = droneToObjectVector.length
 			timeToCollision = distanceDroneToObject / currentSpeed
 			objectToTargetVector.sub(target.position, this.position)
@@ -95,7 +94,6 @@ class Cube extends EnvObj {
 			newAcc.add(repulsiveForce)
 		}
 		
-		newAcc.scale(5)
 		return newAcc
 	}
 }
