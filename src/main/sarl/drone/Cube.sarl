@@ -81,8 +81,8 @@ class Cube extends EnvObj {
 					slidingForceV.negate
 				}
 				slidingForce.add(slidingForceV, slidingForceH)
-				slidingForce.scale((objectRadius - distanceOfObjectToPath) / slidingForce.length)
-				slidingForce.scale(2 / timeToCollision - 2 / tMax)
+				slidingForce.scale((objectRadius - distanceOfObjectToPath)*5 / slidingForce.length)
+				slidingForce.scale(5 / timeToCollision - 5 / tMax)
 				newAcc.add(slidingForce)
 			}
 		}

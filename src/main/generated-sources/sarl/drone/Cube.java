@@ -86,9 +86,9 @@ public class Cube extends EnvObj {
         }
         slidingForce.add(slidingForceV, slidingForceH);
         float _length_1 = slidingForce.length();
-        float _divide_1 = ((objectRadius - distanceOfObjectToPath) / _length_1);
+        float _divide_1 = (((objectRadius - distanceOfObjectToPath) * 5) / _length_1);
         slidingForce.scale(_divide_1);
-        slidingForce.scale(((2 / timeToCollision) - (2 / tMax)));
+        slidingForce.scale(((5 / timeToCollision) - (5 / tMax)));
         newAcc.add(slidingForce);
       }
     }
