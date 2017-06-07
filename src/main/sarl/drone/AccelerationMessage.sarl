@@ -40,5 +40,5 @@ def setFrustum(fr : ArrayList<Cube>)
 	frustum = fr
 }
 	
-	
+
 }

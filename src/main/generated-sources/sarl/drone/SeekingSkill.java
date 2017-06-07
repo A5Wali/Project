@@ -58,7 +58,7 @@ public class SeekingSkill extends Skill implements Moving {
       return stopVector;
     } else {
       Vector3f newAcc = droneToTargetVector;
-      for (int i = 1; (i < ((Object[])Conversions.unwrapArray(accelerationMessage.getFrustum(), Object.class)).length); i++) {
+      for (int i = 0; (i < ((Object[])Conversions.unwrapArray(accelerationMessage.getFrustum(), Object.class)).length); i++) {
         newAcc.add(accelerationMessage.getFrustum().get(i).computeForces(body, target));
       }
       float _breakZone = body.getBreakZone();
