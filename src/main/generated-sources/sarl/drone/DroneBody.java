@@ -25,6 +25,8 @@ public class DroneBody extends Cube {
   
   private float stopZone;
   
+  private float protectingSphere;
+  
   private final float tMax;
   
   public DroneBody() {
@@ -36,9 +38,10 @@ public class DroneBody extends Cube {
     this.tMax = 10;
     this.breakZone = 5;
     this.stopZone = 1;
+    this.protectingSphere = 10;
   }
   
-  public DroneBody(final Point3f pos, final float w, final float maxS, final float maxA, final float tMax, final float bZ, final float sZ) {
+  public DroneBody(final Point3f pos, final float w, final float maxS, final float maxA, final float tMax, final float bZ, final float sZ, final float pS) {
     super(pos, w);
     Vector3f _vector3f = new Vector3f();
     this.currentSpeed = _vector3f;
@@ -47,6 +50,7 @@ public class DroneBody extends Cube {
     this.tMax = tMax;
     this.breakZone = bZ;
     this.stopZone = sZ;
+    this.protectingSphere = pS;
   }
   
   public Vector3f setCurrentSpeed(final Vector3f cS) {
@@ -83,6 +87,11 @@ public class DroneBody extends Cube {
     return this.stopZone;
   }
   
+  @Pure
+  public float getProtectingSphere() {
+    return this.protectingSphere;
+  }
+  
   @Override
   @Pure
   @SyntheticMember
@@ -102,6 +111,8 @@ public class DroneBody extends Cube {
       return false;
     if (Float.floatToIntBits(other.stopZone) != Float.floatToIntBits(this.stopZone))
       return false;
+    if (Float.floatToIntBits(other.protectingSphere) != Float.floatToIntBits(this.protectingSphere))
+      return false;
     if (Float.floatToIntBits(other.tMax) != Float.floatToIntBits(this.tMax))
       return false;
     return super.equals(obj);
@@ -117,10 +128,11 @@ public class DroneBody extends Cube {
     result = prime * result + Float.floatToIntBits(this.maxAcc);
     result = prime * result + Float.floatToIntBits(this.breakZone);
     result = prime * result + Float.floatToIntBits(this.stopZone);
+    result = prime * result + Float.floatToIntBits(this.protectingSphere);
     result = prime * result + Float.floatToIntBits(this.tMax);
     return result;
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 9826634484L;
+  private final static long serialVersionUID = 9552270628L;
 }

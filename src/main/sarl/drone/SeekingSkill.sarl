@@ -30,9 +30,7 @@ skill SeekingSkill implements Moving {
 		info("Frustum : " + accelerationMessage.frustum)
 		val body : DroneBody = accelerationMessage.droneBody
 		var droneToTargetVector = new Vector3f
-		var tarPos = target.position
-		var bodyPos = body.position
-		droneToTargetVector.sub(tarPos, bodyPos) // vector from drone to target
+		droneToTargetVector.sub(target.position, body.position) // vector from drone to target
 		val distanceDroneToTarget : float = droneToTargetVector.length // absolute distance between the drone and target
 		
 		if (distanceDroneToTarget <= body.stopZone) {
@@ -40,21 +38,18 @@ skill SeekingSkill implements Moving {
 			stopVector.negate
 			return stopVector 	// stop
 		} else {
-			
 			var newAcc : Vector3f = droneToTargetVector // acceleration to return after some modifications
-			if (newAcc.length > body.maxAcc) {
-				newAcc.scale(body.maxAcc / newAcc.length) 	// acceleration adjustment to respect max Acceleration
-			}
-			for (var i : int = 0; i < accelerationMessage.frustum.length; i++) {
+			newAcc.scale(body.maxAcc / newAcc.length) 	// acceleration adjustment to respect max Acceleration
+			
+			for (var i : int = 0; i < accelerationMessage.frustum.length; i++) { // loop through each obstacle
 				newAcc.add(accelerationMessage.frustum.get(i).computeForces(body, target))
 			}
-			if (distanceDroneToTarget > body.breakZone) {
-				newAcc.scale((body.maxSpeed - body.currentSpeed.length) / newAcc.length) 	// speed adjustment to reach desired speed
-			} else {
-				newAcc.scale((body.maxSpeed * distanceDroneToTarget / body.breakZone - body.currentSpeed.length) / newAcc.length) 		// speed adjustment to break
-			}
-			if (newAcc.length > body.maxAcc) {
-				newAcc.scale( body.maxAcc/ newAcc.length) // acceleration adjustment to respect max Acceleration
+			if (distanceDroneToTarget > body.breakZone) {//max speed
+				// speed adjustment to reach max speed respecting max acceleration :
+				newAcc.scale(Math.min((body.maxSpeed - body.currentSpeed.length),body.maxAcc) / newAcc.length) 	
+			} else { // break
+				// speed adjustment to break:
+				newAcc.scale((body.maxSpeed * distanceDroneToTarget / body.breakZone - body.currentSpeed.length) / newAcc.length) 		
 			}
 			return newAcc
 		}

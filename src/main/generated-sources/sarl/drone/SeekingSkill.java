@@ -14,7 +14,6 @@ import io.sarl.lang.core.Agent;
 import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
 import java.util.ArrayList;
-import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Extension;
@@ -46,9 +45,7 @@ public class SeekingSkill extends Skill implements Moving {
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
     final DroneBody body = accelerationMessage.getDroneBody();
     Vector3f droneToTargetVector = new Vector3f();
-    Point3f tarPos = target.getPosition();
-    Point3f bodyPos = body.getPosition();
-    droneToTargetVector.sub(tarPos, bodyPos);
+    droneToTargetVector.sub(target.getPosition(), body.getPosition());
     final float distanceDroneToTarget = droneToTargetVector.length();
     float _stopZone = body.getStopZone();
     boolean _lessEqualsThan = (distanceDroneToTarget <= _stopZone);
@@ -58,46 +55,33 @@ public class SeekingSkill extends Skill implements Moving {
       return stopVector;
     } else {
       Vector3f newAcc = droneToTargetVector;
-      float _length = newAcc.length();
       float _maxAcc = body.getMaxAcc();
-      boolean _greaterThan = (_length > _maxAcc);
-      if (_greaterThan) {
-        float _maxAcc_1 = body.getMaxAcc();
-        float _length_1 = newAcc.length();
-        float _divide = (_maxAcc_1 / _length_1);
-        newAcc.scale(_divide);
-      }
+      float _length = newAcc.length();
+      float _divide = (_maxAcc / _length);
+      newAcc.scale(_divide);
       for (int i = 0; (i < ((Object[])Conversions.unwrapArray(accelerationMessage.getFrustum(), Object.class)).length); i++) {
         newAcc.add(accelerationMessage.getFrustum().get(i).computeForces(body, target));
       }
       float _breakZone = body.getBreakZone();
-      boolean _greaterThan_1 = (distanceDroneToTarget > _breakZone);
-      if (_greaterThan_1) {
+      boolean _greaterThan = (distanceDroneToTarget > _breakZone);
+      if (_greaterThan) {
         float _maxSpeed = body.getMaxSpeed();
-        float _length_2 = body.getCurrentSpeed().length();
-        float _minus = (_maxSpeed - _length_2);
-        float _length_3 = newAcc.length();
-        float _divide_1 = (_minus / _length_3);
+        float _length_1 = body.getCurrentSpeed().length();
+        float _minus = (_maxSpeed - _length_1);
+        float _min = Math.min(_minus, body.getMaxAcc());
+        float _length_2 = newAcc.length();
+        float _divide_1 = (_min / _length_2);
         newAcc.scale(_divide_1);
       } else {
         float _maxSpeed_1 = body.getMaxSpeed();
         float _multiply = (_maxSpeed_1 * distanceDroneToTarget);
         float _breakZone_1 = body.getBreakZone();
         float _divide_2 = (_multiply / _breakZone_1);
-        float _length_4 = body.getCurrentSpeed().length();
-        float _minus_1 = (_divide_2 - _length_4);
-        float _length_5 = newAcc.length();
-        float _divide_3 = (_minus_1 / _length_5);
+        float _length_3 = body.getCurrentSpeed().length();
+        float _minus_1 = (_divide_2 - _length_3);
+        float _length_4 = newAcc.length();
+        float _divide_3 = (_minus_1 / _length_4);
         newAcc.scale(_divide_3);
-      }
-      float _length_6 = newAcc.length();
-      float _maxAcc_2 = body.getMaxAcc();
-      boolean _greaterThan_2 = (_length_6 > _maxAcc_2);
-      if (_greaterThan_2) {
-        float _maxAcc_3 = body.getMaxAcc();
-        float _length_7 = newAcc.length();
-        float _divide_4 = (_maxAcc_3 / _length_7);
-        newAcc.scale(_divide_4);
       }
       return newAcc;
     }

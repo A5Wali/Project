@@ -16,6 +16,7 @@ class DroneBody extends Cube{
 	private var maxAcc : float
 	var breakZone : float
 	var stopZone : float 
+	var protectingSphere : float
 	val tMax : float // maximum anticipation time before collision
 	
 	new(){
@@ -26,9 +27,10 @@ class DroneBody extends Cube{
 		this.tMax = 10
 		this.breakZone = 5
 		this.stopZone = 1
+		this.protectingSphere = 10
 	}
 	
-	new(pos : Point3f, w : float, maxS : float, maxA : float, tMax : float, bZ : float, sZ : float){
+	new(pos : Point3f, w : float, maxS : float, maxA : float, tMax : float, bZ : float, sZ : float, pS : float){
 		super(pos, w)
 		this.currentSpeed = new Vector3f()
 		this.maxSpeed = maxS
@@ -36,6 +38,7 @@ class DroneBody extends Cube{
 		this.tMax = tMax
 		this.breakZone = bZ
 		this.stopZone = sZ
+		this.protectingSphere = pS
 	}
 
 	def setCurrentSpeed(cS : Vector3f){
@@ -65,6 +68,8 @@ class DroneBody extends Cube{
 	def getStopZone : float {
 		this.stopZone
 	}
+	
+	def getProtectingSphere : float {
+		this.protectingSphere
+	}
 }
-
-
