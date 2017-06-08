@@ -58,37 +58,46 @@ public class SeekingSkill extends Skill implements Moving {
       return stopVector;
     } else {
       Vector3f newAcc = droneToTargetVector;
+      float _length = newAcc.length();
+      float _maxAcc = body.getMaxAcc();
+      boolean _greaterThan = (_length > _maxAcc);
+      if (_greaterThan) {
+        float _maxAcc_1 = body.getMaxAcc();
+        float _length_1 = newAcc.length();
+        float _divide = (_maxAcc_1 / _length_1);
+        newAcc.scale(_divide);
+      }
       for (int i = 0; (i < ((Object[])Conversions.unwrapArray(accelerationMessage.getFrustum(), Object.class)).length); i++) {
         newAcc.add(accelerationMessage.getFrustum().get(i).computeForces(body, target));
       }
       float _breakZone = body.getBreakZone();
-      boolean _greaterThan = (distanceDroneToTarget > _breakZone);
-      if (_greaterThan) {
+      boolean _greaterThan_1 = (distanceDroneToTarget > _breakZone);
+      if (_greaterThan_1) {
         float _maxSpeed = body.getMaxSpeed();
-        float _length = body.getCurrentSpeed().length();
-        float _minus = (_maxSpeed - _length);
-        float _length_1 = newAcc.length();
-        float _divide = (_minus / _length_1);
-        newAcc.scale(_divide);
+        float _length_2 = body.getCurrentSpeed().length();
+        float _minus = (_maxSpeed - _length_2);
+        float _length_3 = newAcc.length();
+        float _divide_1 = (_minus / _length_3);
+        newAcc.scale(_divide_1);
       } else {
         float _maxSpeed_1 = body.getMaxSpeed();
         float _multiply = (_maxSpeed_1 * distanceDroneToTarget);
         float _breakZone_1 = body.getBreakZone();
-        float _divide_1 = (_multiply / _breakZone_1);
-        float _length_2 = body.getCurrentSpeed().length();
-        float _minus_1 = (_divide_1 - _length_2);
-        float _length_3 = newAcc.length();
-        float _divide_2 = (_minus_1 / _length_3);
-        newAcc.scale(_divide_2);
-      }
-      float _length_4 = newAcc.length();
-      float _maxAcc = body.getMaxAcc();
-      boolean _greaterThan_1 = (_length_4 > _maxAcc);
-      if (_greaterThan_1) {
-        float _maxAcc_1 = body.getMaxAcc();
+        float _divide_2 = (_multiply / _breakZone_1);
+        float _length_4 = body.getCurrentSpeed().length();
+        float _minus_1 = (_divide_2 - _length_4);
         float _length_5 = newAcc.length();
-        float _divide_3 = (_maxAcc_1 / _length_5);
+        float _divide_3 = (_minus_1 / _length_5);
         newAcc.scale(_divide_3);
+      }
+      float _length_6 = newAcc.length();
+      float _maxAcc_2 = body.getMaxAcc();
+      boolean _greaterThan_2 = (_length_6 > _maxAcc_2);
+      if (_greaterThan_2) {
+        float _maxAcc_3 = body.getMaxAcc();
+        float _length_7 = newAcc.length();
+        float _divide_4 = (_maxAcc_3 / _length_7);
+        newAcc.scale(_divide_4);
       }
       return newAcc;
     }

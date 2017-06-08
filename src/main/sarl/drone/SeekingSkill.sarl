@@ -40,7 +40,11 @@ skill SeekingSkill implements Moving {
 			stopVector.negate
 			return stopVector 	// stop
 		} else {
+			
 			var newAcc : Vector3f = droneToTargetVector // acceleration to return after some modifications
+			if (newAcc.length > body.maxAcc) {
+				newAcc.scale(body.maxAcc / newAcc.length) 	// acceleration adjustment to respect max Acceleration
+			}
 			for (var i : int = 0; i < accelerationMessage.frustum.length; i++) {
 				newAcc.add(accelerationMessage.frustum.get(i).computeForces(body, target))
 			}
