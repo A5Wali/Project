@@ -17,9 +17,9 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class DroneBody extends Cube {
   private Vector3f currentSpeed;
   
-  private float maxSpeed;
+  private Vector3f maxSpeed;
   
-  private float maxAcc;
+  private Vector3f maxAcc;
   
   private float breakZone;
   
@@ -33,15 +33,17 @@ public class DroneBody extends Cube {
     super();
     Vector3f _vector3f = new Vector3f();
     this.currentSpeed = _vector3f;
-    this.maxAcc = 5;
-    this.maxSpeed = 20;
+    Vector3f _vector3f_1 = new Vector3f();
+    this.maxAcc = _vector3f_1;
+    Vector3f _vector3f_2 = new Vector3f();
+    this.maxSpeed = _vector3f_2;
     this.tMax = 10;
     this.breakZone = 5;
     this.stopZone = 1;
     this.protectingSphere = 10;
   }
   
-  public DroneBody(final Point3f pos, final float w, final float maxS, final float maxA, final float tMax, final float bZ, final float sZ, final float pS) {
+  public DroneBody(final Point3f pos, final float w, final Vector3f maxS, final Vector3f maxA, final float tMax, final float bZ, final float sZ, final float pS) {
     super(pos, w);
     Vector3f _vector3f = new Vector3f();
     this.currentSpeed = _vector3f;
@@ -63,12 +65,12 @@ public class DroneBody extends Cube {
   }
   
   @Pure
-  public float getMaxSpeed() {
+  public Vector3f getMaxSpeed() {
     return this.maxSpeed;
   }
   
   @Pure
-  public float getMaxAcc() {
+  public Vector3f getMaxAcc() {
     return this.maxAcc;
   }
   
@@ -103,10 +105,6 @@ public class DroneBody extends Cube {
     if (getClass() != obj.getClass())
       return false;
     DroneBody other = (DroneBody) obj;
-    if (Float.floatToIntBits(other.maxSpeed) != Float.floatToIntBits(this.maxSpeed))
-      return false;
-    if (Float.floatToIntBits(other.maxAcc) != Float.floatToIntBits(this.maxAcc))
-      return false;
     if (Float.floatToIntBits(other.breakZone) != Float.floatToIntBits(this.breakZone))
       return false;
     if (Float.floatToIntBits(other.stopZone) != Float.floatToIntBits(this.stopZone))
@@ -124,8 +122,6 @@ public class DroneBody extends Cube {
   public int hashCode() {
     int result = super.hashCode();
     final int prime = 31;
-    result = prime * result + Float.floatToIntBits(this.maxSpeed);
-    result = prime * result + Float.floatToIntBits(this.maxAcc);
     result = prime * result + Float.floatToIntBits(this.breakZone);
     result = prime * result + Float.floatToIntBits(this.stopZone);
     result = prime * result + Float.floatToIntBits(this.protectingSphere);
@@ -134,5 +130,5 @@ public class DroneBody extends Cube {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 9552270628L;
+  private final static long serialVersionUID = 5711524140L;
 }

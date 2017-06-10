@@ -12,8 +12,8 @@ import javax.vecmath.Vector3f
  */
 class DroneBody extends Cube{
 	private var currentSpeed : Vector3f
-	private var maxSpeed : float
-	private var maxAcc : float
+	private var maxSpeed : Vector3f
+	private var maxAcc : Vector3f
 	var breakZone : float
 	var stopZone : float 
 	var protectingSphere : float
@@ -22,15 +22,15 @@ class DroneBody extends Cube{
 	new(){
 		super()
 		this.currentSpeed = new Vector3f()
-		this.maxAcc = 5
-		this.maxSpeed = 20
+		this.maxAcc = new Vector3f()
+		this.maxSpeed = new Vector3f()
 		this.tMax = 10
 		this.breakZone = 5
 		this.stopZone = 1
 		this.protectingSphere = 10
 	}
 	
-	new(pos : Point3f, w : float, maxS : float, maxA : float, tMax : float, bZ : float, sZ : float, pS : float){
+	new(pos : Point3f, w : float, maxS : Vector3f, maxA : Vector3f, tMax : float, bZ : float, sZ : float, pS : float) {
 		super(pos, w)
 		this.currentSpeed = new Vector3f()
 		this.maxSpeed = maxS
@@ -49,11 +49,11 @@ class DroneBody extends Cube{
 		this.currentSpeed
 	}
 	
-	def getMaxSpeed : float {
+	def getMaxSpeed : Vector3f {
 		this.maxSpeed
 	}
 	
-	def getMaxAcc : float {
+	def getMaxAcc : Vector3f {
 		this.maxAcc
 	}
 	

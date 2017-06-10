@@ -39,19 +39,42 @@ skill SeekingSkill implements Moving {
 			return stopVector 	// stop
 		} else {
 			var newAcc : Vector3f = droneToTargetVector // acceleration to return after some modifications
-			newAcc.scale(body.maxAcc / newAcc.length) 	// acceleration adjustment to respect max Acceleration
+			newAcc.scale(body.maxAcc.length / newAcc.length) 	// acceleration adjustment to respect max Acceleration
 			
 			for (var i : int = 0; i < accelerationMessage.frustum.length; i++) { // loop through each obstacle
 				newAcc.add(accelerationMessage.frustum.get(i).computeForces(body, target))
 			}
 			if (distanceDroneToTarget > body.breakZone) {//max speed
+				var newAccABS : Vector3f
+				var currentSpeedABS : Vector3f
+				currentSpeedABS.absolute(body.currentSpeed)
 				// speed adjustment to reach max speed respecting max acceleration :
-				newAcc.scale(Math.min((body.maxSpeed - body.currentSpeed.length),body.maxAcc) / newAcc.length) 	
+				newAcc.scale((body.currentSpeed.length + Math.min(body.maxSpeed.length - body.currentSpeed.length, body.maxAcc.length)) / newAcc.length)
+				newAccABS.absolute(newAcc)
+				if(newAccABS.x > body.maxSpeed.x){
+					newAcc.scale(body.maxSpeed.x / newAccABS.x)
+					newAccABS.absolute(newAcc)
+				}
+				if(newAccABS.y > body.maxSpeed.y){
+					newAcc.scale(body.maxSpeed.y / newAccABS.y)
+					newAccABS.absolute(newAcc)
+				}
+				if( (newAccABS.x - currentSpeedABS.x) > body.maxAcc.x){
+					newAcc.scale((currentSpeedABS.x + body.maxAcc.x ) / newAccABS.x)
+					newAccABS.absolute(newAcc)
+				}
+				if ((newAccABS.y - currentSpeedABS.y) > body.maxAcc.y) {
+					newAcc.scale((currentSpeedABS.y + body.maxAcc.y ) / newAccABS.y)
+				}
+				var subAcc : Vector3f
+				subAcc.sub(newAcc, body.currentSpeed)
+				return subAcc
 			} else { // break
 				// speed adjustment to break:
-				newAcc.scale((body.maxSpeed * distanceDroneToTarget / body.breakZone - body.currentSpeed.length) / newAcc.length) 		
+				newAcc.scale((body.maxSpeed.length * distanceDroneToTarget / body.breakZone - body.currentSpeed.length) / newAcc.length)
+				return newAcc	
 			}
-			return newAcc
+			
 		}
 	}
 }
