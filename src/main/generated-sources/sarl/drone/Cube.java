@@ -65,7 +65,7 @@ public class Cube extends EnvObj {
     final float distanceDroneToTarget = droneToTargetVector.length();
     Vector3f newAcc = new Vector3f();
     final float currentSpeed = body.getCurrentSpeed().length();
-    final float objectRadius = ((this.width * 0.87f) + (1.8f * ((Cube) body).width));
+    final float objectRadius = ((this.width * 0.87f) + (2.5f * ((Cube) body).width));
     Vector3f droneToObjectVector = new Vector3f();
     droneToObjectVector.sub(this.getPosition(), body.getPosition());
     final float distanceDroneToObject = droneToObjectVector.length();
@@ -99,9 +99,12 @@ public class Cube extends EnvObj {
         }
         slidingForce.add(FirstPerpendicularVector, SecondPerpendicularVector);
         slidingForce.normalize();
+        double _pow = Math.pow(((5 + objectRadius) - distanceOfObjectToPath), 2);
+        double _pow_1 = Math.pow((distanceDroneToObject - objectRadius), 2);
+        float _divide = (((float) _pow) / ((float) _pow_1));
+        float _multiply = (_divide * 0.1f);
         slidingForce.scale(
-          Math.abs(
-            ((((5 + objectRadius) - distanceOfObjectToPath) / (distanceDroneToObject - objectRadius)) * 0.35f)));
+          Math.abs(_multiply));
         newAcc.add(slidingForce);
       }
     }
@@ -114,12 +117,12 @@ public class Cube extends EnvObj {
       repulsiveForce = droneToObjectVector;
       repulsiveForce.negate();
       repulsiveForce.normalize();
-      double _pow = Math.pow(body.getProtectingSphere(), 4);
-      double _pow_1 = Math.pow(realDistanceDroneToObject, 4);
-      float _divide = (((float) _pow) / ((float) _pow_1));
-      float _multiply = (_divide * 0.01f);
+      double _pow_2 = Math.pow(body.getProtectingSphere(), 4);
+      double _pow_3 = Math.pow(realDistanceDroneToObject, 4);
+      float _divide_1 = (((float) _pow_2) / ((float) _pow_3));
+      float _multiply_1 = (_divide_1 * 0.05f);
       repulsiveForce.scale(
-        Math.abs(_multiply));
+        Math.abs(_multiply_1));
       newAcc.add(repulsiveForce);
     }
     return newAcc;
