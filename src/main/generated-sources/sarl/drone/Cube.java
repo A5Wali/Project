@@ -65,7 +65,7 @@ public class Cube extends EnvObj {
     final float distanceDroneToTarget = droneToTargetVector.length();
     Vector3f newAcc = new Vector3f();
     final float currentSpeed = body.getCurrentSpeed().length();
-    final float objectRadius = ((this.width * 0.87f) + (1.5f * ((Cube) body).width));
+    final float objectRadius = ((this.width * 0.87f) + (1.8f * ((Cube) body).width));
     Vector3f droneToObjectVector = new Vector3f();
     droneToObjectVector.sub(this.getPosition(), body.getPosition());
     final float distanceDroneToObject = droneToObjectVector.length();
@@ -101,7 +101,7 @@ public class Cube extends EnvObj {
         slidingForce.normalize();
         slidingForce.scale(
           Math.abs(
-            ((((5 + objectRadius) - distanceOfObjectToPath) / (distanceDroneToObject - objectRadius)) * 0.2f)));
+            ((((5 + objectRadius) - distanceOfObjectToPath) / (distanceDroneToObject - objectRadius)) * 0.35f)));
         newAcc.add(slidingForce);
       }
     }
@@ -114,17 +114,12 @@ public class Cube extends EnvObj {
       repulsiveForce = droneToObjectVector;
       repulsiveForce.negate();
       repulsiveForce.normalize();
-      float _protectingSphere_1 = body.getProtectingSphere();
-      float _protectingSphere_2 = body.getProtectingSphere();
-      float _multiply = (_protectingSphere_1 * _protectingSphere_2);
-      float _protectingSphere_3 = body.getProtectingSphere();
-      float _multiply_1 = (_multiply * _protectingSphere_3);
-      float _protectingSphere_4 = body.getProtectingSphere();
-      float _multiply_2 = (_multiply_1 * _protectingSphere_4);
-      float _divide = (_multiply_2 / (((realDistanceDroneToObject * realDistanceDroneToObject) * realDistanceDroneToObject) * realDistanceDroneToObject));
-      float _multiply_3 = (_divide * 0.003f);
+      double _pow = Math.pow(body.getProtectingSphere(), 4);
+      double _pow_1 = Math.pow(realDistanceDroneToObject, 4);
+      float _divide = (((float) _pow) / ((float) _pow_1));
+      float _multiply = (_divide * 0.01f);
       repulsiveForce.scale(
-        Math.abs(_multiply_3));
+        Math.abs(_multiply));
       newAcc.add(repulsiveForce);
     }
     return newAcc;
