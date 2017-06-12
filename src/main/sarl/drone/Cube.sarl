@@ -33,15 +33,28 @@ class Cube extends EnvObj {
 	def getWidth() : float {
 		this.width
 	}
+
+def getPerpendicularVector(original : Vector3f) : Vector3f {
+	var C : Vector3f
+	if (original.y != 0 || original.z != 0)
+		C = new Vector3f(1, 0, 0)
+	else
+		C = new Vector3f(0, 1, 0)
+	var B : Vector3f = new Vector3f()
+	B.cross(original, C)
+	B
+}
 	
 	@Override
 	def computeForces(body : DroneBody, target : Sphere) : Vector3f {
+		
+	
 		var droneToTargetVector : Vector3f = new Vector3f
 		droneToTargetVector.sub(target.position, body.position) // vector from drone to target
 		val distanceDroneToTarget : float = droneToTargetVector.length // absolute distance between the drone and target
 		var newAcc : Vector3f = new Vector3f // acceleration to return after some modifications
 		val currentSpeed : float = body.currentSpeed.length
-		val objectRadius : float = this.width * 0.87f + (body as Cube).width // sqrt(3)/2 = 0.87
+		val objectRadius : float = this.width * 0.87f + 1.5f*(body as Cube).width // sqrt(3)/2 = 0.87
 		var droneToObjectVector : Vector3f = new Vector3f // vector from drone to object i
 		droneToObjectVector.sub(this.position, body.position)
 		val distanceDroneToObject : float = droneToObjectVector.length // distance drone to object
@@ -56,77 +69,58 @@ class Cube extends EnvObj {
 			val timeToCollision : float = (distanceDroneToObject-objectRadius) / currentSpeed
 			var objectToTargetVector : Vector3f = new Vector3f
 			objectToTargetVector.sub(target.position, this.position)
-			
-			
+
 			// Sliding Force:
 			
 			// = the object is between target and drone & we are in anticipation time (tmax) :
-			if ((distanceDroneToObject < distanceDroneToTarget) && (objectToTargetVector.length < distanceDroneToTarget) && (timeToCollision < body.TMax)) {
-				var slidingForce1 : Vector3f = new Vector3f
-				var slidingForce2 : Vector3f = new Vector3f
+			if ((distanceDroneToObject < distanceDroneToTarget) &&
+				(objectToTargetVector.length < distanceDroneToTarget) && (timeToCollision < body.TMax)) {
+				var FirstPerpendicularVector : Vector3f
+				var SecondPerpendicularVector : Vector3f = new Vector3f
+				var slidingForce : Vector3f = new Vector3f
 
+				FirstPerpendicularVector = getPerpendicularVector(droneToObjectVector)
+				FirstPerpendicularVector.normalize
+				SecondPerpendicularVector.cross(droneToObjectVector, FirstPerpendicularVector)
+				SecondPerpendicularVector.normalize
+				
+				// Horizontal sliding Force:
 				println("Sliding force")
 				println("dist : " + distanceDroneToObject)
-				//sliding Force 1:
-				slidingForce1.cross(droneToTargetVector, droneToObjectVector)
-				var slidingForce1ABS : Vector3f
-				slidingForce1ABS.absolute(slidingForce1)
-				//determine which direction is the shortest:
-				if(slidingForce1ABS.x > slidingForce1ABS.y && slidingForce1ABS.x > slidingForce1ABS.z){
-					if(droneToObjectVector.x > 0){
-						if(slidingForce1.x > 0){
-							slidingForce1.negate
-						}
-					} else {
-						if(slidingForce1.x < 0){
-							slidingForce1.negate
-						}
-					}
-				} else if (slidingForce1ABS.y > slidingForce1ABS.x && slidingForce1ABS.y > slidingForce1ABS.z) {
-					if (droneToObjectVector.y > 0) {
-						if (slidingForce1.y > 0) {
-							slidingForce1.negate
-						}
-					} else {
-						if (slidingForce1.y < 0) {
-							slidingForce1.negate
-						}
-					}
-				} else if (slidingForce1ABS.z > slidingForce1ABS.x && slidingForce1ABS.z > slidingForce1ABS.y) {
-					if (droneToObjectVector.z > 0) {
-						if (slidingForce1.z > 0) {
-							slidingForce1.negate
-						}
-					} else {
-						if (slidingForce1.z < 0) {
-							slidingForce1.negate
-						}
-					}
+				if ((FirstPerpendicularVector.dot(droneToTargetVector) ) < 0) {
+					FirstPerpendicularVector.negate
 				}
-				slidingForce1.scale(1.0f / slidingForce1.length)
 
-				// sliding Force 2:
-				slidingForce2.cross(droneToObjectVector, slidingForce1)
-				if((slidingForce2.dot(droneToTargetVector) ) < 0 ){
-					slidingForce2.negate
+				// Vertical sliding Force:
+				if ((SecondPerpendicularVector.dot(droneToTargetVector) ) < 0) {
+					SecondPerpendicularVector.negate
 				}
-				slidingForce2.scale(1.0f / slidingForce2.length)
-				
-				slidingForce1.add(slidingForce2)
-				//for adjustment change the '5' value :
-				slidingForce1.scale((objectRadius - distanceOfObjectToPath) * 5 * (body.TMax * body.TMax / timeToCollision - body.TMax) / slidingForce1.length)
-				newAcc.add(slidingForce1)
-			}
+
+				slidingForce.add(FirstPerpendicularVector, SecondPerpendicularVector)
+				slidingForce.normalize
+				// for adjustment change the '5' value :
+				slidingForce.scale(
+					Math.abs(
+						((5+objectRadius - distanceOfObjectToPath) / (distanceDroneToObject-objectRadius)) * 0.2f))
+				newAcc.add(slidingForce)
+			}	
 		}
 
-		// We add a Repulsive force in Protected area:
+
+	// We add a Repulsive force in Protected area:
 		val realDistanceDroneToObject : float = distanceDroneToObject - objectRadius
 		if (realDistanceDroneToObject < body.protectingSphere) {
+			println("Repulsive force");
 			var repulsiveForce : Vector3f = new Vector3f
 			repulsiveForce = droneToObjectVector
 			repulsiveForce.negate
+			repulsiveForce.normalize
 			// for adjustment change the '5' value :
-			repulsiveForce.scale((body.protectingSphere - realDistanceDroneToObject) * 5 *(body.protectingSphere * body.protectingSphere / realDistanceDroneToObject - body.protectingSphere) / repulsiveForce.length)
+			repulsiveForce.scale(
+				Math.abs(
+				((body.protectingSphere * body.protectingSphere * body.protectingSphere * body.protectingSphere) /
+					(realDistanceDroneToObject * realDistanceDroneToObject * realDistanceDroneToObject *
+				realDistanceDroneToObject)) * 0.003f))
 			newAcc.add(repulsiveForce)
 		}
 		

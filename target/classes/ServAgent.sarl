@@ -65,7 +65,10 @@ agent ServAgent {
 	 	info("Client connected to server")
 		spawn(BufferReaderAgent, socket)
 		writer = new PrintWriter(socket.getOutputStream());
-		spawn(DroneAgent)
+		for(var i : int  = 0; i< 4; i++) 
+			spawn(DroneAgent)
+		
+		
 		//		spawn(testAgent2)
 	 	
 

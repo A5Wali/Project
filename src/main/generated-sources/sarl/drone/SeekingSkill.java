@@ -1,7 +1,6 @@
 package drone;
 
 import drone.AccelerationMessage;
-import drone.Cube;
 import drone.DroneBody;
 import drone.Moving;
 import drone.Sphere;
@@ -13,7 +12,6 @@ import io.sarl.lang.annotation.SyntheticMember;
 import io.sarl.lang.core.Agent;
 import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
-import java.util.ArrayList;
 import javax.vecmath.Vector3f;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Extension;
@@ -39,10 +37,6 @@ public class SeekingSkill extends Skill implements Moving {
   
   @Pure
   public Vector3f seekingFixedTarget(final AccelerationMessage accelerationMessage, final Sphere target) {
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    ArrayList<Cube> _frustum = accelerationMessage.getFrustum();
-    String _plus = ("Frustum : " + _frustum);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
     final DroneBody body = accelerationMessage.getDroneBody();
     Vector3f droneToTargetVector = new Vector3f();
     droneToTargetVector.sub(target.getPosition(), body.getPosition());
@@ -55,9 +49,9 @@ public class SeekingSkill extends Skill implements Moving {
       return stopVector;
     } else {
       Vector3f newAcc = droneToTargetVector;
-      float _length = body.getMaxAcc().length();
-      float _length_1 = newAcc.length();
-      float _divide = (_length / _length_1);
+      float _max = Math.max(Math.max(body.getMaxAcc().x, body.getMaxAcc().y), body.getMaxAcc().z);
+      float _length = newAcc.length();
+      float _divide = (_max / _length);
       newAcc.scale(_divide);
       for (int i = 0; (i < ((Object[])Conversions.unwrapArray(accelerationMessage.getFrustum(), Object.class)).length); i++) {
         newAcc.add(accelerationMessage.getFrustum().get(i).computeForces(body, target));
@@ -65,17 +59,17 @@ public class SeekingSkill extends Skill implements Moving {
       float _breakZone = body.getBreakZone();
       boolean _greaterThan = (distanceDroneToTarget > _breakZone);
       if (_greaterThan) {
-        Vector3f newAccABS = null;
-        Vector3f currentSpeedABS = null;
+        Vector3f newAccABS = new Vector3f();
+        Vector3f currentSpeedABS = new Vector3f();
         currentSpeedABS.absolute(body.getCurrentSpeed());
-        float _length_2 = body.getCurrentSpeed().length();
-        float _length_3 = body.getMaxSpeed().length();
-        float _length_4 = body.getCurrentSpeed().length();
-        float _minus = (_length_3 - _length_4);
+        float _length_1 = body.getCurrentSpeed().length();
+        float _length_2 = body.getMaxSpeed().length();
+        float _length_3 = body.getCurrentSpeed().length();
+        float _minus = (_length_2 - _length_3);
         float _min = Math.min(_minus, body.getMaxAcc().length());
-        float _plus_1 = (_length_2 + _min);
-        float _length_5 = newAcc.length();
-        float _divide_1 = (_plus_1 / _length_5);
+        float _plus = (_length_1 + _min);
+        float _length_4 = newAcc.length();
+        float _divide_1 = (_plus / _length_4);
         newAcc.scale(_divide_1);
         newAccABS.absolute(newAcc);
         if ((newAccABS.x > body.getMaxSpeed().x)) {
@@ -86,25 +80,41 @@ public class SeekingSkill extends Skill implements Moving {
           newAcc.scale((body.getMaxSpeed().y / newAccABS.y));
           newAccABS.absolute(newAcc);
         }
-        if (((newAccABS.x - currentSpeedABS.x) > body.getMaxAcc().x)) {
-          newAcc.scale(((currentSpeedABS.x + body.getMaxAcc().x) / newAccABS.x));
+        if ((newAccABS.z > body.getMaxSpeed().z)) {
+          newAcc.scale((body.getMaxSpeed().z / newAccABS.z));
           newAccABS.absolute(newAcc);
         }
-        if (((newAccABS.y - currentSpeedABS.y) > body.getMaxAcc().y)) {
-          newAcc.scale(((currentSpeedABS.y + body.getMaxAcc().y) / newAccABS.y));
-        }
-        Vector3f subAcc = null;
+        Vector3f subAcc = new Vector3f();
         subAcc.sub(newAcc, body.getCurrentSpeed());
+        Vector3f subAccABS = new Vector3f();
+        subAccABS.absolute(subAcc);
+        if ((subAccABS.x > body.getMaxAcc().x)) {
+          subAcc.scale((body.getMaxAcc().x / subAccABS.x));
+          subAccABS.absolute(newAcc);
+        }
+        if ((subAccABS.y > body.getMaxAcc().y)) {
+          subAcc.scale((body.getMaxAcc().y / subAccABS.y));
+          subAccABS.absolute(newAcc);
+        }
+        if ((subAccABS.z > body.getMaxAcc().z)) {
+          subAcc.scale((body.getMaxAcc().z / subAccABS.z));
+        }
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        Vector3f _maxAcc = body.getMaxAcc();
+        String _plus_1 = ("maxAcc : " + _maxAcc);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus_1);
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(("Acc : " + subAcc));
         return subAcc;
       } else {
-        float _length_6 = body.getMaxSpeed().length();
-        float _multiply = (_length_6 * distanceDroneToTarget);
+        float _length_5 = body.getMaxSpeed().length();
+        float _multiply = (_length_5 * distanceDroneToTarget);
         float _breakZone_1 = body.getBreakZone();
         float _divide_2 = (_multiply / _breakZone_1);
-        float _length_7 = body.getCurrentSpeed().length();
-        float _minus_1 = (_divide_2 - _length_7);
-        float _length_8 = newAcc.length();
-        float _divide_3 = (_minus_1 / _length_8);
+        float _length_6 = body.getCurrentSpeed().length();
+        float _minus_1 = (_divide_2 - _length_6);
+        float _length_7 = newAcc.length();
+        float _divide_3 = (_minus_1 / _length_7);
         newAcc.scale(_divide_3);
         return newAcc;
       }
