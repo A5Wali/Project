@@ -38,13 +38,16 @@ skill SeekingSkill implements Moving {
 			stopVector.negate
 			return stopVector 	// stop
 		} else {
+
 			var newAcc : Vector3f = droneToTargetVector // acceleration to return after some modifications
 			newAcc.scale(Math.max(Math.max(body.maxAcc.x, body.maxAcc.y), body.maxAcc.z) / newAcc.length) // acceleration adjustment to respect max Acceleration
+
+			if (distanceDroneToTarget > body.breakZone) { // max speed
 			
-			for (var i : int = 0; i < accelerationMessage.frustum.length; i++) { // loop through each obstacle
+				for (var i : int = 0; i < accelerationMessage.frustum.length; i++) { // loop through each obstacle
 				newAcc.add(accelerationMessage.frustum.get(i).computeForces(body, target))
-			}
-			if (distanceDroneToTarget > body.breakZone) {//max speed
+				}
+			
 				var newAccABS : Vector3f = new Vector3f
 				var currentSpeedABS : Vector3f = new Vector3f
 				currentSpeedABS.absolute(body.currentSpeed)
@@ -86,8 +89,28 @@ skill SeekingSkill implements Moving {
 				return subAcc
 			} else { // break
 				// speed adjustment to break:
-				newAcc.normalize
-				newAcc.scale((body.maxSpeed.length * distanceDroneToTarget / body.breakZone - body.currentSpeed.length) )
+				
+				newAcc.scale(
+					(body.maxSpeed.length * Math.sqrt(distanceDroneToTarget / body.breakZone) as float))
+
+				newAcc.sub(newAcc, body.currentSpeed)
+				
+				var newAccABS : Vector3f = new Vector3f
+				newAccABS.absolute(newAcc)
+
+				if (newAccABS.x > body.maxAcc.x) {
+					newAcc.scale(body.maxAcc.x / newAccABS.x)
+					newAccABS.absolute(newAcc)
+				}
+				if (newAccABS.y > body.maxAcc.y) {
+					newAcc.scale(body.maxAcc.y / newAccABS.y)
+					newAccABS.absolute(newAcc)
+				}
+				if (newAccABS.z > body.maxAcc.z) {
+					newAcc.scale(body.maxAcc.z / newAccABS.z)
+				}
+				
+				
 				return newAcc	
 			}
 			

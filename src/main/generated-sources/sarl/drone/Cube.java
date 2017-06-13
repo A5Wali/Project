@@ -65,19 +65,20 @@ public class Cube extends EnvObj {
     final float distanceDroneToTarget = droneToTargetVector.length();
     Vector3f newAcc = new Vector3f();
     final float currentSpeed = body.getCurrentSpeed().length();
-    final float objectRadius = ((this.width * 0.87f) + (2.5f * ((Cube) body).width));
+    final float objectRadius = ((this.width * 0.87f) + (2f * ((Cube) body).width));
     Vector3f droneToObjectVector = new Vector3f();
     droneToObjectVector.sub(this.getPosition(), body.getPosition());
     final float distanceDroneToObject = droneToObjectVector.length();
     Vector3f crossProduct = new Vector3f();
-    crossProduct.cross(droneToObjectVector, droneToTargetVector);
+    crossProduct.cross(droneToObjectVector, body.getCurrentSpeed());
     float _length = crossProduct.length();
-    final float distanceOfObjectToPath = (_length / distanceDroneToTarget);
+    float _length_1 = body.getCurrentSpeed().length();
+    final float distanceOfObjectToPath = (_length / _length_1);
     if ((distanceOfObjectToPath < objectRadius)) {
       final float timeToCollision = ((distanceDroneToObject - objectRadius) / currentSpeed);
       Vector3f objectToTargetVector = new Vector3f();
       objectToTargetVector.sub(target.getPosition(), this.getPosition());
-      if ((((distanceDroneToObject < distanceDroneToTarget) && (objectToTargetVector.length() < distanceDroneToTarget)) && (timeToCollision < body.getTMax()))) {
+      if (((body.getCurrentSpeed().dot(droneToObjectVector) >= 0f) && (timeToCollision < body.getTMax()))) {
         Vector3f FirstPerpendicularVector = null;
         Vector3f SecondPerpendicularVector = new Vector3f();
         Vector3f slidingForce = new Vector3f();
@@ -102,13 +103,13 @@ public class Cube extends EnvObj {
         double _pow = Math.pow(((5 + objectRadius) - distanceOfObjectToPath), 2);
         double _pow_1 = Math.pow((distanceDroneToObject - objectRadius), 2);
         float _divide = (((float) _pow) / ((float) _pow_1));
-        float _multiply = (_divide * 0.1f);
+        float _multiply = (_divide * 0.4f);
         slidingForce.scale(
           Math.abs(_multiply));
         newAcc.add(slidingForce);
       }
     }
-    final float realDistanceDroneToObject = (distanceDroneToObject - objectRadius);
+    final float realDistanceDroneToObject = (distanceDroneToObject - (objectRadius - ((Cube) body).width));
     float _protectingSphere = body.getProtectingSphere();
     boolean _lessThan_2 = (realDistanceDroneToObject < _protectingSphere);
     if (_lessThan_2) {
@@ -117,13 +118,17 @@ public class Cube extends EnvObj {
       repulsiveForce = droneToObjectVector;
       repulsiveForce.negate();
       repulsiveForce.normalize();
-      double _pow_2 = Math.pow(body.getProtectingSphere(), 4);
-      double _pow_3 = Math.pow(realDistanceDroneToObject, 4);
-      float _divide_1 = (((float) _pow_2) / ((float) _pow_3));
-      float _multiply_1 = (_divide_1 * 0.1f);
-      repulsiveForce.scale(
-        Math.abs(_multiply_1));
-      newAcc.add(repulsiveForce);
+      float dotProduct = body.getCurrentSpeed().dot(droneToObjectVector);
+      if ((dotProduct > 0)) {
+        double _pow_2 = Math.pow(body.getProtectingSphere(), 2);
+        double _pow_3 = Math.pow(realDistanceDroneToObject, 2);
+        float _divide_1 = (((float) _pow_2) / ((float) _pow_3));
+        float _multiply_1 = (_divide_1 * 0.4f);
+        float _abs = Math.abs(_multiply_1);
+        float _multiply_2 = (dotProduct * _abs);
+        repulsiveForce.scale(_multiply_2);
+        newAcc.add(repulsiveForce);
+      }
     }
     return newAcc;
   }

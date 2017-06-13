@@ -54,13 +54,13 @@ def getPerpendicularVector(original : Vector3f) : Vector3f {
 		val distanceDroneToTarget : float = droneToTargetVector.length // absolute distance between the drone and target
 		var newAcc : Vector3f = new Vector3f // acceleration to return after some modifications
 		val currentSpeed : float = body.currentSpeed.length
-		val objectRadius : float = this.width * 0.87f + 2.5f*(body as Cube).width // sqrt(3)/2 = 0.87
+		val objectRadius : float = this.width * 0.87f + 2f*(body as Cube).width // sqrt(3)/2 = 0.87
 		var droneToObjectVector : Vector3f = new Vector3f // vector from drone to object i
 		droneToObjectVector.sub(this.position, body.position)
 		val distanceDroneToObject : float = droneToObjectVector.length // distance drone to object
 		var crossProduct : Vector3f = new Vector3f
-		crossProduct.cross(droneToObjectVector, droneToTargetVector)
-		val distanceOfObjectToPath : float = crossProduct.length / distanceDroneToTarget // ditance between object i to droneToTargetPath
+		crossProduct.cross(droneToObjectVector, body.currentSpeed)
+		val distanceOfObjectToPath : float = crossProduct.length / body.currentSpeed.length // ditance between object i to droneToTargetPath
 		
 		//println("--length : " + distanceDroneToObject + "\n\r Drone pos : " + body.position + "\n\r CubePos : " + this.position)
 		
@@ -73,8 +73,7 @@ def getPerpendicularVector(original : Vector3f) : Vector3f {
 			// Sliding Force:
 			
 			// = the object is between target and drone & we are in anticipation time (tmax) :
-			if ((distanceDroneToObject < distanceDroneToTarget) &&
-				(objectToTargetVector.length < distanceDroneToTarget) && (timeToCollision < body.TMax)) {
+			if (body.currentSpeed.dot(droneToObjectVector) >= 0f && (timeToCollision < body.TMax)) {
 				var FirstPerpendicularVector : Vector3f
 				var SecondPerpendicularVector : Vector3f = new Vector3f
 				var slidingForce : Vector3f = new Vector3f
@@ -101,14 +100,14 @@ def getPerpendicularVector(original : Vector3f) : Vector3f {
 				// for adjustment change the '5' value :
 				slidingForce.scale(
 					Math.abs(
-						(Math.pow(5+objectRadius - distanceOfObjectToPath,2) as float / Math.pow((distanceDroneToObject-objectRadius),2) as float) * 0.1f))
+						(Math.pow(5+objectRadius - distanceOfObjectToPath,2) as float / Math.pow((distanceDroneToObject-objectRadius),2) as float) * 0.4f))
 				newAcc.add(slidingForce)
 			}	
 		}
 
 
 	// We add a Repulsive force in Protected area:
-		val realDistanceDroneToObject : float = distanceDroneToObject - objectRadius
+		val realDistanceDroneToObject : float = distanceDroneToObject - (objectRadius - (body as Cube).width)
 		if (realDistanceDroneToObject < body.protectingSphere) {
 			println("Repulsive force");
 			var repulsiveForce : Vector3f = new Vector3f
@@ -116,11 +115,16 @@ def getPerpendicularVector(original : Vector3f) : Vector3f {
 			repulsiveForce.negate
 			repulsiveForce.normalize
 			// for adjustment change the '5' value :
-			repulsiveForce.scale(
-				Math.abs(
-				((Math.pow(body.protectingSphere, 4) as float) /
-					(Math.pow(realDistanceDroneToObject, 4 ) as float)) * 0.1f))
-			newAcc.add(repulsiveForce)
+			var dotProduct : float = body.currentSpeed.dot(droneToObjectVector)
+			if(dotProduct > 0)
+			{
+				repulsiveForce.scale(
+					dotProduct * Math.abs(
+					((Math.pow(body.protectingSphere, 2) as float) /
+						(Math.pow(realDistanceDroneToObject, 2 ) as float)) * 0.4f))
+				newAcc.add(repulsiveForce)
+			
+			}
 		}
 		
 		return newAcc

@@ -53,12 +53,12 @@ public class SeekingSkill extends Skill implements Moving {
       float _length = newAcc.length();
       float _divide = (_max / _length);
       newAcc.scale(_divide);
-      for (int i = 0; (i < ((Object[])Conversions.unwrapArray(accelerationMessage.getFrustum(), Object.class)).length); i++) {
-        newAcc.add(accelerationMessage.getFrustum().get(i).computeForces(body, target));
-      }
       float _breakZone = body.getBreakZone();
       boolean _greaterThan = (distanceDroneToTarget > _breakZone);
       if (_greaterThan) {
+        for (int i = 0; (i < ((Object[])Conversions.unwrapArray(accelerationMessage.getFrustum(), Object.class)).length); i++) {
+          newAcc.add(accelerationMessage.getFrustum().get(i).computeForces(body, target));
+        }
         Vector3f newAccABS = new Vector3f();
         Vector3f currentSpeedABS = new Vector3f();
         currentSpeedABS.absolute(body.getCurrentSpeed());
@@ -107,14 +107,26 @@ public class SeekingSkill extends Skill implements Moving {
         _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(("Acc : " + subAcc));
         return subAcc;
       } else {
-        newAcc.normalize();
         float _length_5 = body.getMaxSpeed().length();
-        float _multiply = (_length_5 * distanceDroneToTarget);
         float _breakZone_1 = body.getBreakZone();
-        float _divide_2 = (_multiply / _breakZone_1);
-        float _length_6 = body.getCurrentSpeed().length();
-        float _minus_1 = (_divide_2 - _length_6);
-        newAcc.scale(_minus_1);
+        float _divide_2 = (distanceDroneToTarget / _breakZone_1);
+        double _sqrt = Math.sqrt(_divide_2);
+        float _multiply = (_length_5 * ((float) _sqrt));
+        newAcc.scale(_multiply);
+        newAcc.sub(newAcc, body.getCurrentSpeed());
+        Vector3f newAccABS_1 = new Vector3f();
+        newAccABS_1.absolute(newAcc);
+        if ((newAccABS_1.x > body.getMaxAcc().x)) {
+          newAcc.scale((body.getMaxAcc().x / newAccABS_1.x));
+          newAccABS_1.absolute(newAcc);
+        }
+        if ((newAccABS_1.y > body.getMaxAcc().y)) {
+          newAcc.scale((body.getMaxAcc().y / newAccABS_1.y));
+          newAccABS_1.absolute(newAcc);
+        }
+        if ((newAccABS_1.z > body.getMaxAcc().z)) {
+          newAcc.scale((body.getMaxAcc().z / newAccABS_1.z));
+        }
         return newAcc;
       }
     }
