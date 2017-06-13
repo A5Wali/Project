@@ -107,15 +107,14 @@ public class SeekingSkill extends Skill implements Moving {
         _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(("Acc : " + subAcc));
         return subAcc;
       } else {
+        newAcc.normalize();
         float _length_5 = body.getMaxSpeed().length();
         float _multiply = (_length_5 * distanceDroneToTarget);
         float _breakZone_1 = body.getBreakZone();
         float _divide_2 = (_multiply / _breakZone_1);
         float _length_6 = body.getCurrentSpeed().length();
         float _minus_1 = (_divide_2 - _length_6);
-        float _length_7 = newAcc.length();
-        float _divide_3 = (_minus_1 / _length_7);
-        newAcc.scale(_divide_3);
+        newAcc.scale(_minus_1);
         return newAcc;
       }
     }

@@ -86,7 +86,8 @@ skill SeekingSkill implements Moving {
 				return subAcc
 			} else { // break
 				// speed adjustment to break:
-				newAcc.scale((body.maxSpeed.length * distanceDroneToTarget / body.breakZone - body.currentSpeed.length) / newAcc.length)
+				newAcc.normalize
+				newAcc.scale((body.maxSpeed.length * distanceDroneToTarget / body.breakZone - body.currentSpeed.length) )
 				return newAcc	
 			}
 			
