@@ -119,7 +119,7 @@ def getPerpendicularVector(original : Vector3f) : Vector3f {
 			repulsiveForce.scale(
 				Math.abs(
 				((Math.pow(body.protectingSphere, 4) as float) /
-					(Math.pow(realDistanceDroneToObject, 4 ) as float)) * 0.05f))
+					(Math.pow(realDistanceDroneToObject, 4 ) as float)) * 0.1f))
 			newAcc.add(repulsiveForce)
 		}
 		

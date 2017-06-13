@@ -120,7 +120,7 @@ public class Cube extends EnvObj {
       double _pow_2 = Math.pow(body.getProtectingSphere(), 4);
       double _pow_3 = Math.pow(realDistanceDroneToObject, 4);
       float _divide_1 = (((float) _pow_2) / ((float) _pow_3));
-      float _multiply_1 = (_divide_1 * 0.05f);
+      float _multiply_1 = (_divide_1 * 0.1f);
       repulsiveForce.scale(
         Math.abs(_multiply_1));
       newAcc.add(repulsiveForce);
