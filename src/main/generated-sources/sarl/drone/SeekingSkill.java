@@ -38,6 +38,7 @@ public class SeekingSkill extends Skill implements Moving {
   @Pure
   public Vector3f seekingFixedTarget(final AccelerationMessage accelerationMessage, final Sphere target) {
     final DroneBody body = accelerationMessage.getDroneBody();
+    final float currentSpeed = body.getCurrentSpeed().length();
     Vector3f droneToTargetVector = new Vector3f();
     droneToTargetVector.sub(target.getPosition(), body.getPosition());
     final float distanceDroneToTarget = droneToTargetVector.length();
@@ -57,7 +58,7 @@ public class SeekingSkill extends Skill implements Moving {
       boolean _greaterThan = (distanceDroneToTarget > _breakZone);
       if (_greaterThan) {
         for (int i = 0; (i < ((Object[])Conversions.unwrapArray(accelerationMessage.getFrustum(), Object.class)).length); i++) {
-          newAcc.add(accelerationMessage.getFrustum().get(i).computeForces(body, target));
+          newAcc.add(accelerationMessage.getFrustum().get(i).computeForces(body, target, droneToTargetVector, distanceDroneToTarget, currentSpeed));
         }
         Vector3f newAccABS = new Vector3f();
         Vector3f currentSpeedABS = new Vector3f();

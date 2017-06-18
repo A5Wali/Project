@@ -59,7 +59,7 @@ public class Cuboid extends EnvObj {
     return this.length;
   }
   
-  public Vector3f computeForces(final DroneBody body, final Sphere target) {
+  public Vector3f computeForces(final DroneBody body, final Sphere target, final Vector3f droneToTargetVector, final float distanceDroneToTarget, final float currentSpeed) {
     Vector3f _xblockexpression = null;
     {
       Vector3f TODO = null;
@@ -101,5 +101,5 @@ public class Cuboid extends EnvObj {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 6639194240L;
+  private final static long serialVersionUID = 3074399520L;
 }

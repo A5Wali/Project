@@ -39,46 +39,21 @@ public class Cube extends EnvObj {
     return this.width;
   }
   
-  @Pure
-  public Vector3f getPerpendicularVector(final Vector3f original) {
-    Vector3f _xblockexpression = null;
-    {
-      Vector3f C = null;
-      if (((original.y != 0) || (original.z != 0))) {
-        Vector3f _vector3f = new Vector3f(1, 0, 0);
-        C = _vector3f;
-      } else {
-        Vector3f _vector3f_1 = new Vector3f(0, 1, 0);
-        C = _vector3f_1;
-      }
-      Vector3f B = new Vector3f();
-      B.cross(original, C);
-      _xblockexpression = B;
-    }
-    return _xblockexpression;
-  }
-  
   @Override
-  public Vector3f computeForces(final DroneBody body, final Sphere target) {
-    Vector3f droneToTargetVector = new Vector3f();
-    droneToTargetVector.sub(target.getPosition(), body.getPosition());
-    final float distanceDroneToTarget = droneToTargetVector.length();
+  public Vector3f computeForces(final DroneBody body, final Sphere target, final Vector3f droneToTargetVector, final float distanceDroneToTarget, final float currentSpeed) {
     Vector3f newAcc = new Vector3f();
-    final float currentSpeed = body.getCurrentSpeed().length();
-    final float objectRadius = ((this.width * 0.9f) + (2.5f * ((Cube) body).width));
+    final float objectRadius = ((this.width * 1f) + (3f * ((Cube) body).width));
     Vector3f droneToObjectVector = new Vector3f();
     droneToObjectVector.sub(this.getPosition(), body.getPosition());
     final float distanceDroneToObject = droneToObjectVector.length();
     Vector3f crossProduct = new Vector3f();
     crossProduct.cross(droneToObjectVector, body.getCurrentSpeed());
     float _length = crossProduct.length();
-    float _length_1 = body.getCurrentSpeed().length();
-    final float distanceOfObjectToPath = (_length / _length_1);
+    final float distanceOfObjectToPath = (_length / currentSpeed);
     if ((distanceOfObjectToPath < objectRadius)) {
       final float timeToCollision = ((distanceDroneToObject - objectRadius) / currentSpeed);
       Vector3f objectToTargetVector = new Vector3f();
       objectToTargetVector.sub(target.getPosition(), this.getPosition());
-      final float dotSpeedObject = body.getCurrentSpeed().dot(droneToObjectVector);
       if (((body.getCurrentSpeed().dot(droneToObjectVector) >= 0f) && (timeToCollision < body.getTMax()))) {
         Vector3f FirstPerpendicularVector = null;
         Vector3f SecondPerpendicularVector = new Vector3f();
@@ -106,13 +81,13 @@ public class Cube extends EnvObj {
         double _pow = Math.pow(_multiply, 2);
         double _pow_1 = Math.pow((timeToCollision * (distanceDroneToObject - objectRadius)), 2);
         float _divide = (((float) _pow) / ((float) _pow_1));
-        float _multiply_1 = (_divide * 0.3f);
+        float _multiply_1 = (_divide * 0.1f);
         slidingForce.scale(
           Math.abs(_multiply_1));
         newAcc.add(slidingForce);
       }
     }
-    final float realDistanceDroneToObject = (distanceDroneToObject - (objectRadius - (2f * ((Cube) body).width)));
+    final float realDistanceDroneToObject = Math.max((distanceDroneToObject - (objectRadius - (2.5f * ((Cube) body).width))), 0.01f);
     float _protectingSphere = body.getProtectingSphere();
     boolean _lessThan_2 = (realDistanceDroneToObject < _protectingSphere);
     if (_lessThan_2) {
@@ -121,10 +96,10 @@ public class Cube extends EnvObj {
       repulsiveForce = droneToObjectVector;
       repulsiveForce.negate();
       repulsiveForce.normalize();
-      double _pow_2 = Math.pow(body.getProtectingSphere(), 2);
-      double _pow_3 = Math.pow(realDistanceDroneToObject, 2);
+      double _pow_2 = Math.pow(body.getProtectingSphere(), 1);
+      double _pow_3 = Math.pow(realDistanceDroneToObject, 1);
       float _divide_1 = (((float) _pow_2) / ((float) _pow_3));
-      float _multiply_2 = (_divide_1 * 80f);
+      float _multiply_2 = (_divide_1 * 0.1f);
       repulsiveForce.scale(
         Math.abs(_multiply_2));
       newAcc.add(repulsiveForce);
@@ -159,5 +134,5 @@ public class Cube extends EnvObj {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 2044934913L;
+  private final static long serialVersionUID = -1564942304L;
 }

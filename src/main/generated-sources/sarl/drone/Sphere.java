@@ -8,6 +8,7 @@ import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 /**
@@ -34,70 +35,76 @@ public class Sphere extends EnvObj {
     return this.radius;
   }
   
-  public Vector3f computeForces(final DroneBody body, final Sphere target) {
-    final float tMax = body.getTMax();
-    Vector3f droneToObjectVector = null;
-    Vector3f droneToTargetVector = null;
-    droneToTargetVector.sub(target.getPosition(), body.getPosition());
-    final float distanceDroneToTarget = droneToTargetVector.length();
-    Vector3f newAcc = null;
-    final float currentSpeed = body.getCurrentSpeed().length();
-    float distanceOfObjectToPath = 0;
-    Vector3f crossProduct = null;
-    float distanceDroneToObject = 0;
-    Vector3f objectToTargetVector = null;
-    float timeToCollision = 0;
-    Vector3f slidingForceH = null;
-    Vector3f slidingForceV = null;
-    Vector3f slidingForce = null;
-    float _length = droneToTargetVector.length();
-    final float scaledDroneToTargetVectorLength = (_length / 5);
-    final float protectingSphere = 5;
-    Vector3f repulsiveForce = null;
-    droneToObjectVector.sub(this.getPosition(), body.getPosition());
-    crossProduct.cross(droneToObjectVector, droneToTargetVector);
-    float _length_1 = crossProduct.length();
-    float _divide = (_length_1 / distanceDroneToTarget);
-    distanceOfObjectToPath = _divide;
-    distanceDroneToObject = droneToObjectVector.length();
+  @Override
+  public Vector3f computeForces(final DroneBody body, final Sphere target, final Vector3f droneToTargetVector, final float distanceDroneToTarget, final float currentSpeed) {
+    Vector3f newAcc = new Vector3f();
     float _width = ((Cube) body).getWidth();
-    float _divide_1 = (_width / 2);
-    float _plus = ((this.radius / 2) + _divide_1);
-    boolean _lessThan = (distanceOfObjectToPath < _plus);
-    if (_lessThan) {
-      distanceDroneToObject = droneToObjectVector.length();
-      timeToCollision = (distanceDroneToObject / currentSpeed);
+    float _multiply = (3f * _width);
+    final float objectRadius = ((this.radius * 1f) + _multiply);
+    Vector3f droneToObjectVector = new Vector3f();
+    droneToObjectVector.sub(this.getPosition(), body.getPosition());
+    final float distanceDroneToObject = droneToObjectVector.length();
+    Vector3f crossProduct = new Vector3f();
+    crossProduct.cross(droneToObjectVector, body.getCurrentSpeed());
+    float _length = crossProduct.length();
+    final float distanceOfObjectToPath = (_length / currentSpeed);
+    if ((distanceOfObjectToPath < objectRadius)) {
+      final float timeToCollision = ((distanceDroneToObject - objectRadius) / currentSpeed);
+      Vector3f objectToTargetVector = new Vector3f();
       objectToTargetVector.sub(target.getPosition(), this.getPosition());
-      if ((((distanceDroneToObject < distanceDroneToTarget) && (objectToTargetVector.length() < distanceDroneToTarget)) && (timeToCollision < tMax))) {
-        Vector3f _vector3f = new Vector3f(0, 1, 0);
-        slidingForceH.cross(droneToObjectVector, _vector3f);
-        float _dot = slidingForceH.dot(droneToTargetVector);
-        boolean _lessThan_1 = (_dot < 0);
+      if (((body.getCurrentSpeed().dot(droneToObjectVector) >= 0f) && (timeToCollision < body.getTMax()))) {
+        Vector3f FirstPerpendicularVector = null;
+        Vector3f SecondPerpendicularVector = new Vector3f();
+        Vector3f slidingForce = new Vector3f();
+        FirstPerpendicularVector = this.getPerpendicularVector(droneToObjectVector);
+        FirstPerpendicularVector.normalize();
+        SecondPerpendicularVector.cross(droneToObjectVector, FirstPerpendicularVector);
+        SecondPerpendicularVector.normalize();
+        InputOutput.<String>println("Sliding force");
+        InputOutput.<String>println(("dist : " + Float.valueOf(distanceDroneToObject)));
+        float _dot = FirstPerpendicularVector.dot(droneToTargetVector);
+        boolean _lessThan = (_dot < 0);
+        if (_lessThan) {
+          FirstPerpendicularVector.negate();
+        }
+        float _dot_1 = SecondPerpendicularVector.dot(droneToTargetVector);
+        boolean _lessThan_1 = (_dot_1 < 0);
         if (_lessThan_1) {
-          slidingForceH.scale((-1));
+          SecondPerpendicularVector.negate();
         }
-        Vector3f _vector3f_1 = new Vector3f(0, 0, 1);
-        slidingForceV.cross(droneToObjectVector, _vector3f_1);
-        float _dot_1 = slidingForceV.dot(droneToTargetVector);
-        boolean _lessThan_2 = (_dot_1 < 0);
-        if (_lessThan_2) {
-          slidingForceV.scale((-1));
-        }
-        slidingForce.add(slidingForceV, slidingForceH);
-        float _length_2 = slidingForce.length();
-        float _divide_2 = (scaledDroneToTargetVectorLength / _length_2);
-        slidingForce.scale(_divide_2);
-        slidingForce.scale(((1 / timeToCollision) - (1 / tMax)));
+        slidingForce.add(FirstPerpendicularVector, SecondPerpendicularVector);
+        slidingForce.normalize();
+        float _tMax = body.getTMax();
+        float _multiply_1 = (_tMax * (objectRadius - distanceOfObjectToPath));
+        double _pow = Math.pow(_multiply_1, 2);
+        double _pow_1 = Math.pow((timeToCollision * (distanceDroneToObject - objectRadius)), 2);
+        float _divide = (((float) _pow) / ((float) _pow_1));
+        float _multiply_2 = (_divide * 
+          0.1f);
+        slidingForce.scale(
+          Math.abs(_multiply_2));
         newAcc.add(slidingForce);
       }
     }
-    if ((distanceDroneToObject < protectingSphere)) {
+    float _width_1 = ((Cube) body).getWidth();
+    float _multiply_3 = (2.5f * _width_1);
+    float _minus = (objectRadius - _multiply_3);
+    float _minus_1 = (distanceDroneToObject - _minus);
+    final float realDistanceDroneToObject = Math.max(_minus_1, 0.01f);
+    float _protectingSphere = body.getProtectingSphere();
+    boolean _lessThan_2 = (realDistanceDroneToObject < _protectingSphere);
+    if (_lessThan_2) {
+      InputOutput.<String>println("Repulsive force");
+      Vector3f repulsiveForce = new Vector3f();
       repulsiveForce = droneToObjectVector;
       repulsiveForce.negate();
-      float _length_3 = repulsiveForce.length();
-      float _divide_3 = (scaledDroneToTargetVectorLength / _length_3);
-      repulsiveForce.scale(_divide_3);
-      repulsiveForce.scale(((1 / distanceDroneToObject) - (1 / protectingSphere)));
+      repulsiveForce.normalize();
+      double _pow_2 = Math.pow(body.getProtectingSphere(), 1);
+      double _pow_3 = Math.pow(realDistanceDroneToObject, 1);
+      float _divide_1 = (((float) _pow_2) / ((float) _pow_3));
+      float _multiply_4 = (_divide_1 * 0.3f);
+      repulsiveForce.scale(
+        Math.abs(_multiply_4));
       newAcc.add(repulsiveForce);
     }
     return newAcc;
@@ -130,5 +137,5 @@ public class Sphere extends EnvObj {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 2624137884L;
+  private final static long serialVersionUID = -940656836L;
 }

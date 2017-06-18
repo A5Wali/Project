@@ -30,7 +30,19 @@ class EnvObj implements Serializable {
 		this.position
 	}
 	
-	def computeForces(body : DroneBody, target : Sphere) : Vector3f{
+	def computeForces(body : DroneBody, target : Sphere, droneToTargetVector : Vector3f, distanceDroneToTarget : float,
+		currentSpeed : float) : Vector3f {
 		
+	}
+
+	def getPerpendicularVector(original : Vector3f) : Vector3f {
+		var C : Vector3f
+		if (original.y != 0 || original.z != 0)
+			C = new Vector3f(1, 0, 0)
+		else
+			C = new Vector3f(0, 1, 0)
+		var B : Vector3f = new Vector3f()
+		B.cross(original, C)
+		B
 	}
 }

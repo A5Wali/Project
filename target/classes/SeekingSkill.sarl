@@ -29,6 +29,7 @@ skill SeekingSkill implements Moving {
 	def seekingFixedTarget(accelerationMessage : AccelerationMessage, target : drone.Sphere) : Vector3f {
 		//info("Frustum : " + accelerationMessage.frustum)
 		val body : DroneBody = accelerationMessage.droneBody
+		val currentSpeed : float = body.currentSpeed.length
 		var droneToTargetVector = new Vector3f
 		droneToTargetVector.sub(target.position, body.position) // vector from drone to target
 		val distanceDroneToTarget : float = droneToTargetVector.length // absolute distance between the drone and target
@@ -45,7 +46,7 @@ skill SeekingSkill implements Moving {
 			if (distanceDroneToTarget > body.breakZone) { // max speed
 			
 				for (var i : int = 0; i < accelerationMessage.frustum.length; i++) { // loop through each obstacle
-				newAcc.add(accelerationMessage.frustum.get(i).computeForces(body, target))
+				newAcc.add(accelerationMessage.frustum.get(i).computeForces(body, target, droneToTargetVector, distanceDroneToTarget, currentSpeed))
 				}
 			
 				var newAccABS : Vector3f = new Vector3f

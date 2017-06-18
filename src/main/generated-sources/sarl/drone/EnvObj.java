@@ -37,8 +37,27 @@ public class EnvObj implements Serializable {
     return this.position;
   }
   
-  public Vector3f computeForces(final DroneBody body, final Sphere target) {
+  public Vector3f computeForces(final DroneBody body, final Sphere target, final Vector3f droneToTargetVector, final float distanceDroneToTarget, final float currentSpeed) {
     return null;
+  }
+  
+  @Pure
+  public Vector3f getPerpendicularVector(final Vector3f original) {
+    Vector3f _xblockexpression = null;
+    {
+      Vector3f C = null;
+      if (((original.y != 0) || (original.z != 0))) {
+        Vector3f _vector3f = new Vector3f(1, 0, 0);
+        C = _vector3f;
+      } else {
+        Vector3f _vector3f_1 = new Vector3f(0, 1, 0);
+        C = _vector3f_1;
+      }
+      Vector3f B = new Vector3f();
+      B.cross(original, C);
+      _xblockexpression = B;
+    }
+    return _xblockexpression;
   }
   
   @Override
@@ -57,5 +76,5 @@ public class EnvObj implements Serializable {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 3416089209L;
+  private final static long serialVersionUID = -103623014L;
 }
