@@ -17,6 +17,10 @@ import java.io.PrintWriter
 import java.net.ServerSocket
 import java.net.Socket
 import java.util.HashMap
+import java.nio.charset.Charset
+import java.nio.file.Paths
+import java.nio.file.Files
+import java.nio.charset.StandardCharsets
 
 event SendMessage {
 	var message : Message
@@ -60,19 +64,29 @@ agent ServAgent {
 		info("Server Agent started")
 		val port = 8080;
 		gson = new Gson()
+		var dir = System.getProperty("user.dir");
+		var rep = dir.replace("\\", "/") + "/UnityLaucher_Data/NbDrones.txt"
+		var nbString = readFile(rep, StandardCharsets.UTF_8)
+		var nbDrones = Integer.parseInt(nbString);
 		socketServer = new ServerSocket(port)
 		socket = socketServer.accept()
 	 	info("Client connected to server")
 		spawn(BufferReaderAgent, socket)
 		writer = new PrintWriter(socket.getOutputStream());
-		for(var i : int  = 0; i< 16; i++) 
+		for (var i : int = 0; i < nbDrones; i++) 
 			spawn(DroneAgent)
 		
 		
 		//		spawn(testAgent2)
 	 	
 
-	}	
+	}
+
+	def readFile(path : String, encoding : Charset) : String
+	{
+	  var encoded = Files.readAllBytes(Paths.get(path));
+	  return new String(encoded, encoding);
+	}
 	
 	on SendMessage {
 		var message = occurrence.message

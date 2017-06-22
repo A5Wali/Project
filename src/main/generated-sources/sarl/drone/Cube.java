@@ -3,7 +3,6 @@ package drone;
 import drone.DroneBody;
 import drone.EnvObj;
 import drone.Sphere;
-import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import javax.vecmath.Point3f;
@@ -15,7 +14,6 @@ import org.eclipse.xtext.xbase.lib.Pure;
  * @author Alexandre
  */
 @SarlSpecification("0.5")
-@SarlElementType(8)
 @SuppressWarnings("all")
 public class Cube extends EnvObj {
   private float width;
@@ -127,8 +125,8 @@ public class Cube extends EnvObj {
   @Pure
   @SyntheticMember
   public int hashCode() {
-    int result = super.hashCode();
     final int prime = 31;
+    int result = super.hashCode();
     result = prime * result + Float.floatToIntBits(this.width);
     return result;
   }
