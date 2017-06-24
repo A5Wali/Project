@@ -14,5 +14,7 @@ public enum TypeMessage {
   
   DELETE,
   
-  TARGET;
+  TARGET,
+  
+  CLOSE;
 }

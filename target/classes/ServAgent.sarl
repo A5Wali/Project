@@ -44,7 +44,6 @@ agent ServAgent {
 
 	uses Logging, Lifecycle, DefaultContextInteractions
 	
-	
 	var socketServer : ServerSocket
 	var socket : Socket
 	var reader : BufferedReader

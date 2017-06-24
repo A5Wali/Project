@@ -10,5 +10,6 @@ enum TypeMessage {
 	ACC,
 	SPAWN,
 	DELETE,
-	TARGET;
+	TARGET,
+	CLOSE;
 }

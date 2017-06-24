@@ -20,13 +20,14 @@ import java.util.concurrent.Executors
  * 
  */
 agent BufferReaderAgent {
-	uses Logging, DefaultContextInteractions, Lifecycle
+	uses Logging, DefaultContextInteractions, Lifecycle, CommunicationCapacity
 
 	var gson : Gson
 	var reader : BufferedReader
 	var executorService : ExecutorService
 
 	on Initialize {
+		setSkill(new CommunicationSkill, CommunicationCapacity)
 		val params = occurrence.parameters
 		val socket : Socket = params.get(0) as Socket
 		val is = new InputStreamReader(socket.getInputStream());
@@ -40,10 +41,10 @@ agent BufferReaderAgent {
 					try {
 						if (reader.ready) {
 							var json = reader.readLine
-							info("Line json : " + json)
 							var message = gson.fromJson(json, Message)
 							var uuid = message.UUID
-							sendMessageToConcernedAgent(uuid, message)
+							if(message.type == TypeMessage.CLOSE) closeServer
+							else sendMessageToConcernedAgent(uuid, message)
 						}
 					} catch (e : InterruptedException) {
 						e.printStackTrace()
