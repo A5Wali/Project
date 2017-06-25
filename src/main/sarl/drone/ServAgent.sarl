@@ -29,7 +29,6 @@ event SendMessage {
 	}
 }
 
-event ReadMessage
 event CloseServer
 event StopBuffer
 event ReceivedMessage{
@@ -53,10 +52,7 @@ agent ServAgent {
 	def sendMessage(m : Message){
 		emit (new SendMessage(m))
 	}
-	
-	def readMessage(){
-		emit (new ReadMessage())
-	}
+
 
 	on Initialize {
 
@@ -83,9 +79,8 @@ agent ServAgent {
 
 	def readFile(path : String, encoding : Charset) : String
 	{
-		Files.readAllLines(Paths.get(path), encoding).get(0)
-//	  var encoded = Files.readAllBytes(Paths.get(path));
-//	  return new String(encoded, encoding);
+	  var encoded = Files.readAllBytes(Paths.get(path));
+	  return new String(encoded, encoding);
 	}
 	
 	on SendMessage {
