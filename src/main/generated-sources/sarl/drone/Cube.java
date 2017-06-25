@@ -3,6 +3,7 @@ package drone;
 import drone.DroneBody;
 import drone.EnvObj;
 import drone.Sphere;
+import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import javax.vecmath.Point3f;
@@ -13,6 +14,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
  * @author Alexandre
  */
 @SarlSpecification("0.5")
+@SarlElementType(8)
 @SuppressWarnings("all")
 public class Cube extends EnvObj {
   private float width;
@@ -76,13 +78,13 @@ public class Cube extends EnvObj {
         double _pow = Math.pow(_multiply, 1);
         double _pow_1 = Math.pow((timeToCollision * (distanceDroneToObject - objectRadius)), 1);
         float _divide = (((float) _pow) / ((float) _pow_1));
-        float _multiply_1 = (_divide * 5f);
+        float _multiply_1 = (_divide * 3f);
         slidingForce.scale(
           Math.abs(_multiply_1));
         newAcc.add(slidingForce);
       }
     }
-    final float realDistanceDroneToObject = Math.max((distanceDroneToObject - (objectRadius - (4f * ((Cube) body).width))), 0.01f);
+    final float realDistanceDroneToObject = Math.max((distanceDroneToObject - (objectRadius - (3.5f * ((Cube) body).width))), 0.001f);
     float _protectingSphere = body.getProtectingSphere();
     boolean _lessThan_2 = (realDistanceDroneToObject < _protectingSphere);
     if (_lessThan_2) {
@@ -93,7 +95,7 @@ public class Cube extends EnvObj {
       double _pow_2 = Math.pow(body.getProtectingSphere(), 1);
       double _pow_3 = Math.pow(realDistanceDroneToObject, 1);
       float _divide_1 = (((float) _pow_2) / ((float) _pow_3));
-      float _multiply_2 = (_divide_1 * 0.7f);
+      float _multiply_2 = (_divide_1 * 0.8f);
       repulsiveForce.scale(
         Math.abs(_multiply_2));
       newAcc.add(repulsiveForce);
@@ -121,8 +123,8 @@ public class Cube extends EnvObj {
   @Pure
   @SyntheticMember
   public int hashCode() {
-    final int prime = 31;
     int result = super.hashCode();
+    final int prime = 31;
     result = prime * result + Float.floatToIntBits(this.width);
     return result;
   }

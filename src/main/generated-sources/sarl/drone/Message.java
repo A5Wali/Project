@@ -2,12 +2,15 @@ package drone;
 
 import com.google.gson.Gson;
 import drone.TypeMessage;
+import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
+import java.util.Objects;
 import java.util.UUID;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 @SarlSpecification("0.5")
+@SarlElementType(8)
 @SuppressWarnings("all")
 public class Message {
   private TypeMessage type;
@@ -83,21 +86,12 @@ public class Message {
     if (getClass() != obj.getClass())
       return false;
     Message other = (Message) obj;
-    if (this.type == null) {
-      if (other.type != null)
-        return false;
-    } else if (!this.type.equals(other.type))
+    if (!Objects.equals(this.message, other.message)) {
       return false;
-    if (this.message == null) {
-      if (other.message != null)
-        return false;
-    } else if (!this.message.equals(other.message))
+    }
+    if (!Objects.equals(this.UUID, other.UUID)) {
       return false;
-    if (this.UUID == null) {
-      if (other.UUID != null)
-        return false;
-    } else if (!this.UUID.equals(other.UUID))
-      return false;
+    }
     return super.equals(obj);
   }
   
@@ -105,11 +99,10 @@ public class Message {
   @Pure
   @SyntheticMember
   public int hashCode() {
-    final int prime = 31;
     int result = super.hashCode();
-    result = prime * result + ((this.type== null) ? 0 : this.type.hashCode());
-    result = prime * result + ((this.message== null) ? 0 : this.message.hashCode());
-    result = prime * result + ((this.UUID== null) ? 0 : this.UUID.hashCode());
+    final int prime = 31;
+    result = prime * result + Objects.hashCode(this.message);
+    result = prime * result + Objects.hashCode(this.UUID);
     return result;
   }
 }
