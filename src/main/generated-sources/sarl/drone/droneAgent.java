@@ -4,7 +4,6 @@ import com.google.common.base.Objects;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import drone.AccelerationMessage;
-import drone.CloseServer;
 import drone.CommunicationCapacity;
 import drone.CommunicationSkill;
 import drone.DroneBody;
@@ -13,6 +12,7 @@ import drone.Moving;
 import drone.ReceivedMessage;
 import drone.SeekingSkill;
 import drone.Sphere;
+import drone.StopDrones;
 import drone.TypeMessage;
 import io.sarl.core.AgentKilled;
 import io.sarl.core.AgentSpawned;
@@ -108,7 +108,7 @@ public class DroneAgent extends Agent {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$CloseServer$3(final CloseServer occurrence) {
+  private void $behaviorUnit$StopDrones$3(final StopDrones occurrence) {
     Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = $getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
     _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.killMe();
   }
@@ -247,18 +247,18 @@ public class DroneAgent extends Agent {
   
   @SyntheticMember
   @PerceptGuardEvaluator
-  private void $guardEvaluator$CloseServer(final CloseServer occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$CloseServer$3(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
   private void $guardEvaluator$Destroy(final Destroy occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
     ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$2(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$StopDrones(final StopDrones occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$StopDrones$3(occurrence));
   }
   
   @SyntheticMember

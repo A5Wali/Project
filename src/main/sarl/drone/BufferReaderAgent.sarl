@@ -61,6 +61,7 @@ agent BufferReaderAgent {
 	}
 
 	on drone.StopBuffer {
+		emit(new drone.StopDrones)
 		executorService.shutdownNow;
 		var sd = executorService.isTerminated
 		while (!sd) {

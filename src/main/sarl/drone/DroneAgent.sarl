@@ -22,6 +22,8 @@ import com.google.gson.reflect.TypeToken
 /** 
  * 
  */
+ 
+event StopDrones
 agent DroneAgent {
 	uses Logging, Lifecycle, CommunicationCapacity, Moving
 	private var body : DroneBody
@@ -65,7 +67,7 @@ agent DroneAgent {
 		info("The agent was stopped.")
 	}
 	
-	on CloseServer{
+	on StopDrones{
 		killMe
 	}
 
