@@ -2,6 +2,7 @@ package drone;
 
 import drone.AccelerationMessage;
 import drone.Sphere;
+import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.core.AgentTrait;
 import io.sarl.lang.core.Capacity;
@@ -12,6 +13,7 @@ import javax.vecmath.Vector3f;
  */
 @FunctionalInterface
 @SarlSpecification("0.5")
+@SarlElementType(17)
 @SuppressWarnings("all")
 public interface Moving extends Capacity {
   public abstract Vector3f seekingFixedTarget(final AccelerationMessage listOfObstacle, final Sphere target);

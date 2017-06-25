@@ -84,9 +84,7 @@ skill SeekingSkill implements Moving {
 				if (subAccABS.z > body.maxAcc.z) {
 					subAcc.scale(body.maxAcc.z / subAccABS.z)
 				}
-				
-				info("maxAcc : " + body.maxAcc)
-				info("Acc : " + subAcc)
+
 				return subAcc
 			} else { // break
 				// speed adjustment to break:

@@ -48,7 +48,6 @@ agent DroneAgent {
 			var token = new TypeToken<AccelerationMessage>(){}
 			val messageRx : AccelerationMessage = g.fromJson(o.message, token.getType)
 			val v : Vector3f = seekingFixedTarget(messageRx, this.target)
-			info("Acceleration : " + v)
 			val message = new Message(TypeMessage.ACC, v)
 			sendMessage(message)
 		} else if (o.type == TypeMessage.SPAWN) {

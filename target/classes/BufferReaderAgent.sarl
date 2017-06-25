@@ -65,7 +65,7 @@ agent BufferReaderAgent {
 		executorService.shutdownNow;
 		var sd = executorService.isTerminated
 		while (!sd) {
-			info("Pas terminé !")
+			info("Waiting for exit...")
 		}
 		reader.close()
 		emit(new drone.CloseServer)
