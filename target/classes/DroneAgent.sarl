@@ -64,6 +64,10 @@ agent DroneAgent {
 		// You should put all the resource releasing statements in this block of code.
 		info("The agent was stopped.")
 	}
+	
+	on CloseServer{
+		killMe
+	}
 
 	on AgentSpawned {
 		// A new agent has been spawned in our context.
